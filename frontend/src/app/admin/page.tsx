@@ -3,15 +3,16 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import dynamic from 'next/dynamic';
+import ThemeToggle from '../../components/ThemeToggle';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000';
 
 // Dynamic imports to prevent hydration issues
 const CategoryController = dynamic(() => import('./control-center/CategoryController'), {
   loading: () => (
-    <div className="flex flex-col items-center justify-center p-12 border border-white/5 bg-white/[0.01] rounded-3xl gap-3">
-      <span className="w-6 h-6 border-2 border-indigo-500 border-t-transparent rounded-full animate-spin" />
-      <span className="text-xs text-gray-500">Loading Category & Niche Controller...</span>
+    <div className="flex flex-col items-center justify-center p-12 border border-border-custom bg-card-bg rounded-3xl gap-3">
+      <span className="w-6 h-6 border-2 border-accent-custom border-t-transparent rounded-full animate-spin" />
+      <span className="text-xs text-text-secondary">Loading Category & Niche Controller...</span>
     </div>
   ),
   ssr: false,
@@ -19,9 +20,9 @@ const CategoryController = dynamic(() => import('./control-center/CategoryContro
 
 const MaintenanceWorkspace = dynamic(() => import('./control-center/MaintenanceWorkspace'), {
   loading: () => (
-    <div className="flex flex-col items-center justify-center p-12 border border-white/5 bg-white/[0.01] rounded-3xl gap-3">
-      <span className="w-6 h-6 border-2 border-indigo-500 border-t-transparent rounded-full animate-spin" />
-      <span className="text-xs text-gray-500">Loading Diagnostic Monitor...</span>
+    <div className="flex flex-col items-center justify-center p-12 border border-border-custom bg-card-bg rounded-3xl gap-3">
+      <span className="w-6 h-6 border-2 border-accent-custom border-t-transparent rounded-full animate-spin" />
+      <span className="text-xs text-text-secondary">Loading Diagnostic Monitor...</span>
     </div>
   ),
   ssr: false,
@@ -29,9 +30,9 @@ const MaintenanceWorkspace = dynamic(() => import('./control-center/MaintenanceW
 
 const AiIntelligence = dynamic(() => import('./control-center/AiIntelligence'), {
   loading: () => (
-    <div className="flex flex-col items-center justify-center p-12 border border-white/5 bg-white/[0.01] rounded-3xl gap-3">
-      <span className="w-6 h-6 border-2 border-indigo-500 border-t-transparent rounded-full animate-spin" />
-      <span className="text-xs text-gray-500">Loading AI Intelligence Co-Pilot...</span>
+    <div className="flex flex-col items-center justify-center p-12 border border-border-custom bg-card-bg rounded-3xl gap-3">
+      <span className="w-6 h-6 border-2 border-accent-custom border-t-transparent rounded-full animate-spin" />
+      <span className="text-xs text-text-secondary">Loading AI Intelligence Co-Pilot...</span>
     </div>
   ),
   ssr: false,
@@ -39,9 +40,9 @@ const AiIntelligence = dynamic(() => import('./control-center/AiIntelligence'), 
 
 const SEOManagerForm = dynamic(() => import('./seo-manager/SEOManagerForm'), {
   loading: () => (
-    <div className="flex flex-col items-center justify-center p-12 border border-white/5 bg-white/[0.01] rounded-3xl gap-3">
-      <span className="w-6 h-6 border-2 border-indigo-500 border-t-transparent rounded-full animate-spin" />
-      <span className="text-xs text-gray-500">Loading SEO Configuration Console...</span>
+    <div className="flex flex-col items-center justify-center p-12 border border-border-custom bg-card-bg rounded-3xl gap-3">
+      <span className="w-6 h-6 border-2 border-accent-custom border-t-transparent rounded-full animate-spin" />
+      <span className="text-xs text-text-secondary">Loading SEO Configuration Console...</span>
     </div>
   ),
   ssr: false,
@@ -145,7 +146,6 @@ export default function AdminDashboard() {
   useEffect(() => {
     if (isLoggedIn) {
       loadDashboardData();
-      // Poll logs and metrics every 10 seconds for real-time tracking
       const interval = setInterval(loadDashboardData, 10000);
       return () => clearInterval(interval);
     }
@@ -336,63 +336,63 @@ export default function AdminDashboard() {
   // 1. RENDER LOGIN GATE
   if (!isLoggedIn) {
     return (
-      <div className="min-h-screen bg-[#07090e] flex items-center justify-center p-6 selection:bg-indigo-500 selection:text-white relative">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_10%,rgba(16,185,129,0.08),transparent_50%)] pointer-events-none" />
+      <div className="min-h-screen bg-bg-primary text-text-primary flex items-center justify-center p-6 selection:bg-indigo-500 selection:text-white relative font-urbanist">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_10%,rgba(26,115,232,0.08),transparent_50%)] pointer-events-none" />
         
-        <div className="w-full max-w-md bg-white/[0.02] border border-white/10 rounded-3xl p-8 shadow-2xl relative backdrop-blur-md">
+        <div className="w-full max-w-md bg-card-bg border border-border-custom rounded-3xl p-8 shadow-xl relative backdrop-blur-md">
           <div className="flex flex-col items-center gap-2 mb-8 text-center">
-            <div className="w-11 h-11 rounded-xl bg-gradient-to-tr from-emerald-500 to-indigo-600 flex items-center justify-center shadow-lg shadow-emerald-500/10">
-              <span className="text-xl font-bold text-white">A</span>
+            <div className="w-11 h-11 rounded-xl bg-accent-custom flex items-center justify-center text-white font-extrabold text-lg shadow-sm shadow-accent-custom/10">
+              A
             </div>
-            <h2 className="text-xl font-extrabold text-white font-heading mt-2">
-              AdGravity<span className="text-emerald-400">.AI</span> Admin Console
+            <h2 className="text-xl font-extrabold text-text-primary font-heading mt-2">
+              AdGravity<span className="text-accent-custom">.AI</span> Admin Portal
             </h2>
-            <p className="text-gray-400 text-xs mt-1">
-              Natural Language operations and Master controls panel.
+            <p className="text-text-secondary text-xs mt-1 font-medium">
+              Secure Administrative Access Gate.
             </p>
           </div>
 
           {!is2FAVisible ? (
-            <form onSubmit={handleVerifyCredentials} className="flex flex-col gap-4 text-xs">
+            <form onSubmit={handleVerifyCredentials} className="flex flex-col gap-4 text-xs font-semibold text-text-secondary">
               <div className="flex flex-col gap-1.5">
-                <label className="text-gray-400 font-semibold">Username</label>
+                <label className="text-text-primary">Username</label>
                 <input 
                   type="text" 
                   required
                   placeholder="admin"
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
-                  className="px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 focus:border-emerald-500 focus:outline-none text-white transition-all placeholder-gray-600"
+                  className="px-4 py-2.5 rounded-xl bg-bg-primary border border-border-custom focus:border-accent-custom focus:outline-none text-text-primary transition-all placeholder-text-secondary"
                 />
               </div>
 
               <div className="flex flex-col gap-1.5">
-                <label className="text-gray-400 font-semibold">Password</label>
+                <label className="text-text-primary">Password</label>
                 <input 
                   type="password" 
                   required
                   placeholder="••••••••"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 focus:border-emerald-500 focus:outline-none text-white transition-all placeholder-gray-600"
+                  className="px-4 py-2.5 rounded-xl bg-bg-primary border border-border-custom focus:border-accent-custom focus:outline-none text-text-primary transition-all placeholder-text-secondary"
                 />
               </div>
 
               <button 
                 type="submit" 
-                className="w-full mt-2 py-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold transition-all active:scale-[0.98] cursor-pointer shadow-lg shadow-emerald-500/10"
+                className="w-full mt-2 py-3 rounded-xl bg-accent-custom hover:bg-accent-custom/95 text-white font-bold transition-all active:scale-[0.98] cursor-pointer shadow-md shadow-accent-custom/10"
               >
                 Verify Credentials
               </button>
             </form>
           ) : (
-            <form onSubmit={handleVerify2FA} className="flex flex-col gap-4 text-xs">
-              <div className="bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 p-3 rounded-xl leading-relaxed">
+            <form onSubmit={handleVerify2FA} className="flex flex-col gap-4 text-xs font-semibold text-text-secondary">
+              <div className="bg-accent-custom/10 border border-accent-custom/25 text-accent-custom p-3 rounded-xl leading-relaxed">
                 🔒 Credentials verified. Please enter the 6-digit Two-Factor Authentication (2FA) verification code.
               </div>
 
               <div className="flex flex-col gap-1.5">
-                <label className="text-gray-400 font-semibold text-center">2FA Code</label>
+                <label className="text-text-primary text-center">2FA Code</label>
                 <input 
                   type="text" 
                   maxLength={6}
@@ -400,7 +400,7 @@ export default function AdminDashboard() {
                   placeholder="123456"
                   value={twoFactorCode}
                   onChange={(e) => setTwoFactorCode(e.target.value)}
-                  className="px-4 py-3 rounded-xl bg-white/5 border border-white/10 focus:border-emerald-500 focus:outline-none text-white text-center text-lg font-mono tracking-[8px] transition-all placeholder-gray-600"
+                  className="px-4 py-3 rounded-xl bg-bg-primary border border-border-custom focus:border-accent-custom focus:outline-none text-text-primary text-center text-lg font-mono tracking-[8px] transition-all placeholder-text-secondary"
                 />
               </div>
 
@@ -408,13 +408,13 @@ export default function AdminDashboard() {
                 <button 
                   type="button" 
                   onClick={() => setIs2FAVisible(false)}
-                  className="flex-1 py-3 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-white font-bold transition-all cursor-pointer"
+                  className="flex-1 py-3 rounded-xl bg-bg-primary border border-border-custom text-text-primary font-bold transition-all cursor-pointer"
                 >
                   Back
                 </button>
                 <button 
                   type="submit"
-                  className="flex-[2] py-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold transition-all active:scale-[0.98] cursor-pointer shadow-lg shadow-emerald-500/10"
+                  className="flex-[2] py-3 rounded-xl bg-accent-custom hover:bg-accent-custom/95 text-white font-bold transition-all active:scale-[0.98] cursor-pointer shadow-md shadow-accent-custom/10"
                 >
                   Verify & Enter
                 </button>
@@ -423,7 +423,7 @@ export default function AdminDashboard() {
           )}
 
           {loginError && (
-            <div className="mt-4 p-3 bg-red-500/10 border border-red-500/20 text-red-400 text-center rounded-xl font-medium text-xs">
+            <div className="mt-4 p-3 bg-red-500/10 border border-red-500/20 text-red-500 text-center rounded-xl font-medium text-xs">
               {loginError}
             </div>
           )}
@@ -434,34 +434,38 @@ export default function AdminDashboard() {
 
   // 2. RENDER MASTER DASHBOARD
   return (
-    <div className="min-h-screen bg-[#07090e] text-gray-100 flex flex-col font-sans selection:bg-indigo-500 selection:text-white pb-12">
+    <div className="min-h-screen bg-bg-primary text-text-primary flex flex-col font-sans selection:bg-indigo-500 selection:text-white pb-12 transition-colors duration-300 font-urbanist">
       {/* Top Navbar */}
-      <header className="w-full bg-[#0c0f18]/85 backdrop-blur-xl border-b border-white/5 sticky top-0 z-40">
+      <header className="w-full bg-card-bg border-b border-border-custom sticky top-0 z-40 shadow-sm backdrop-blur-md">
         <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
-          <div className="flex items-center gap-2 cursor-pointer" onClick={() => router.push('/')}>
-            <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-indigo-600 to-violet-500 flex items-center justify-center">
-              <span className="text-base font-bold text-white">A</span>
+          <div className="flex items-center gap-2.5 cursor-pointer" onClick={() => router.push('/')}>
+            <div className="w-8 h-8 rounded-xl bg-accent-custom flex items-center justify-center text-white font-extrabold text-sm shadow-sm">
+              A
             </div>
-            <span className="text-lg font-semibold tracking-tight text-white font-heading">
-              AdGravity<span className="text-indigo-400">.AI</span> Control Center
+            <span className="text-lg font-black tracking-tight text-text-primary font-heading">
+              AdGravity<span className="text-accent-custom">.AI</span> Control Center
             </span>
           </div>
 
           <div className="flex items-center gap-4">
+            
+            {/* Theme Toggle widget */}
+            <ThemeToggle />
+
             {/* Role Switch Toggle */}
-            <div className="flex bg-white/5 p-1 rounded-xl border border-white/10 text-xs">
+            <div className="flex bg-bg-primary p-1 rounded-xl border border-border-custom text-xs">
               <button
                 onClick={() => setUserRole('super_admin')}
-                className={`px-3 py-1.5 rounded-lg font-semibold transition-all cursor-pointer ${
-                  userRole === 'super_admin' ? 'bg-indigo-600 text-white shadow' : 'text-gray-400 hover:text-white'
+                className={`px-3 py-1.5 rounded-lg font-bold transition-all cursor-pointer ${
+                  userRole === 'super_admin' ? 'bg-accent-custom text-white shadow-sm' : 'text-text-secondary hover:text-text-primary'
                 }`}
               >
                 Owner (Super Admin)
               </button>
               <button
                 onClick={() => setUserRole('sub_admin')}
-                className={`px-3 py-1.5 rounded-lg font-semibold transition-all cursor-pointer ${
-                  userRole === 'sub_admin' ? 'bg-indigo-600 text-white shadow' : 'text-gray-400 hover:text-white'
+                className={`px-3 py-1.5 rounded-lg font-bold transition-all cursor-pointer ${
+                  userRole === 'sub_admin' ? 'bg-accent-custom text-white shadow-sm' : 'text-text-secondary hover:text-text-primary'
                 }`}
               >
                 Staff (Sub-Admin)
@@ -470,7 +474,7 @@ export default function AdminDashboard() {
 
             <button
               onClick={() => setIsLoggedIn(false)}
-              className="px-3.5 py-2 rounded-xl bg-white/5 hover:bg-white/10 text-white text-xs border border-white/10 font-bold transition-all cursor-pointer"
+              className="px-3.5 py-2 rounded-xl bg-bg-primary hover:bg-black/5 border border-border-custom text-text-primary text-xs font-bold transition-all cursor-pointer"
             >
               Logout
             </button>
@@ -482,235 +486,235 @@ export default function AdminDashboard() {
       <main className="flex-1 w-full max-w-7xl mx-auto px-6 py-8 flex flex-col gap-8">
         
         {/* Banner */}
-        <div className="rounded-3xl bg-gradient-to-tr from-indigo-950/20 via-violet-950/15 to-[#0b0f19] border border-indigo-500/20 p-6 flex flex-col sm:flex-row justify-between items-center gap-4">
+        <div className="rounded-3xl bg-gradient-to-tr from-accent-custom/5 via-accent-custom/10 to-transparent border border-accent-custom/20 p-6 flex flex-col sm:flex-row justify-between items-center gap-4">
           <div className="flex flex-col gap-1">
-            <span className="text-[10px] uppercase tracking-wider text-indigo-400 font-bold">Role-Based Access Control (RBAC) active</span>
-            <h2 className="text-xl font-bold text-white">
-              Currently viewing as: <span className="text-indigo-400 uppercase font-extrabold">{userRole === 'super_admin' ? 'Super Admin / Owner' : 'Sub-Admin / Staff'}</span>
+            <span className="text-[10px] uppercase tracking-wider text-accent-custom font-extrabold">Role-Based Access Control (RBAC) active</span>
+            <h2 className="text-xl font-bold text-text-primary">
+              Currently viewing as: <span className="text-accent-custom uppercase font-extrabold">{userRole === 'super_admin' ? 'Super Admin / Owner' : 'Sub-Admin / Staff'}</span>
             </h2>
-            <p className="text-gray-400 text-xs mt-1">
+            <p className="text-text-secondary text-xs mt-1 font-medium">
               Verify distinct views and parameters using the toggle at the top right.
             </p>
           </div>
-          <span className="px-3.5 py-1 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-300 text-xs font-semibold uppercase">
+          <span className="px-3.5 py-1 rounded-full bg-accent-custom/10 border border-accent-custom/20 text-accent-custom text-xs font-bold uppercase">
             {userRole === 'super_admin' ? 'Owner Mode' : 'Staff Mode'}
           </span>
         </div>
 
         {/* 1. SUPER ADMIN MODE (OWNER VIEW) */}
         {userRole === 'super_admin' && (
-          <div className="flex flex-col gap-8">
+          <div className="flex flex-col gap-8 animate-fade-in">
             {/* Super Admin Sub-Tabs */}
-            <div className="flex border-b border-white/5 pb-1 gap-6 text-xs sm:text-sm overflow-x-auto no-scrollbar">
+            <div className="flex border-b border-border-custom pb-1 gap-6 text-xs sm:text-sm overflow-x-auto no-scrollbar font-bold">
               <button
                 onClick={() => setSuperAdminTab('operations')}
-                className={`pb-3 font-semibold transition-all relative flex items-center gap-1.5 whitespace-nowrap cursor-pointer ${
-                  superAdminTab === 'operations' ? 'text-white font-bold' : 'text-gray-400 hover:text-white'
+                className={`pb-3 transition-all relative flex items-center gap-1.5 whitespace-nowrap cursor-pointer ${
+                  superAdminTab === 'operations' ? 'text-text-primary font-black' : 'text-text-secondary hover:text-text-primary'
                 }`}
               >
                 📊 Platform Operations
                 {superAdminTab === 'operations' && (
-                  <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-indigo-500 rounded-full" />
+                  <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-accent-custom rounded-full" />
                 )}
               </button>
               <button
                 onClick={() => setSuperAdminTab('category')}
-                className={`pb-3 font-semibold transition-all relative flex items-center gap-1.5 whitespace-nowrap cursor-pointer ${
-                  superAdminTab === 'category' ? 'text-white font-bold' : 'text-gray-400 hover:text-white'
+                className={`pb-3 transition-all relative flex items-center gap-1.5 whitespace-nowrap cursor-pointer ${
+                  superAdminTab === 'category' ? 'text-text-primary font-black' : 'text-text-secondary hover:text-text-primary'
                 }`}
               >
                 🏷️ Category Manager
                 {superAdminTab === 'category' && (
-                  <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-indigo-500 rounded-full" />
+                  <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-accent-custom rounded-full" />
                 )}
               </button>
               <button
                 onClick={() => setSuperAdminTab('ai_intelligence')}
-                className={`pb-3 font-semibold transition-all relative flex items-center gap-1.5 whitespace-nowrap cursor-pointer ${
-                  superAdminTab === 'ai_intelligence' ? 'text-emerald-400 font-bold' : 'text-gray-400 hover:text-white'
+                className={`pb-3 transition-all relative flex items-center gap-1.5 whitespace-nowrap cursor-pointer ${
+                  superAdminTab === 'ai_intelligence' ? 'text-accent-custom font-black' : 'text-text-secondary hover:text-text-primary'
                 }`}
               >
                 🤖 AI Intelligence
                 {superAdminTab === 'ai_intelligence' && (
-                  <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-emerald-500 rounded-full shadow-[0_0_8px_rgba(16,185,129,0.5)]" />
+                  <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-accent-custom rounded-full shadow-[0_0_8px_rgba(26,115,232,0.5)]" />
                 )}
               </button>
               <button
                 onClick={() => setSuperAdminTab('seo_manager')}
-                className={`pb-3 font-semibold transition-all relative flex items-center gap-1.5 whitespace-nowrap cursor-pointer ${
-                  superAdminTab === 'seo_manager' ? 'text-white font-bold' : 'text-gray-400 hover:text-white'
+                className={`pb-3 transition-all relative flex items-center gap-1.5 whitespace-nowrap cursor-pointer ${
+                  superAdminTab === 'seo_manager' ? 'text-text-primary font-black' : 'text-text-secondary hover:text-text-primary'
                 }`}
               >
                 🚀 SEO Manager
                 {superAdminTab === 'seo_manager' && (
-                  <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-indigo-500 rounded-full" />
+                  <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-accent-custom rounded-full" />
                 )}
               </button>
               <button
                 onClick={() => setSuperAdminTab('queue')}
-                className={`pb-3 font-semibold transition-all relative flex items-center gap-1.5 whitespace-nowrap cursor-pointer ${
-                  superAdminTab === 'queue' ? 'text-white font-bold' : 'text-gray-400 hover:text-white'
+                className={`pb-3 transition-all relative flex items-center gap-1.5 whitespace-nowrap cursor-pointer ${
+                  superAdminTab === 'queue' ? 'text-text-primary font-black' : 'text-text-secondary hover:text-text-primary'
                 }`}
               >
                 📋 Client Content Queue ({pendingQueue.length})
                 {superAdminTab === 'queue' && (
-                  <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-indigo-500 rounded-full" />
+                  <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-accent-custom rounded-full" />
                 )}
               </button>
               <button
                 onClick={() => setSuperAdminTab('maintenance')}
-                className={`pb-3 font-semibold transition-all relative flex items-center gap-1.5 whitespace-nowrap cursor-pointer ${
-                  superAdminTab === 'maintenance' ? 'text-white font-bold' : 'text-gray-400 hover:text-white'
+                className={`pb-3 transition-all relative flex items-center gap-1.5 whitespace-nowrap cursor-pointer ${
+                  superAdminTab === 'maintenance' ? 'text-text-primary font-black' : 'text-text-secondary hover:text-text-primary'
                 }`}
               >
                 🔧 Developer Tools
                 {superAdminTab === 'maintenance' && (
-                  <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-indigo-500 rounded-full" />
+                  <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-accent-custom rounded-full" />
                 )}
               </button>
             </div>
 
             {/* Tab 1: Operations */}
             {superAdminTab === 'operations' && (
-              <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start animate-fade-in">
                 {/* Left 4 Cols: Revenue Analytics */}
                 <div className="lg:col-span-4 flex flex-col gap-6">
                   {/* Analytics */}
-                  <div className="rounded-3xl bg-white/5 border border-white/10 p-6 flex flex-col gap-4 shadow-xl">
-                    <h3 className="text-sm font-semibold tracking-wide text-gray-400 uppercase">Platform Revenue Analytics</h3>
+                  <div className="rounded-3xl bg-card-bg border border-border-custom p-6 flex flex-col gap-4 shadow-sm">
+                    <h3 className="text-sm font-extrabold tracking-wide text-text-secondary uppercase">Platform Revenue Analytics</h3>
                     
                     <div className="flex flex-col gap-4 mt-2">
-                      <div className="bg-white/[0.01] border border-white/5 p-4 rounded-2xl">
-                        <span className="text-[10px] text-gray-500 font-bold uppercase">Total Platform Revenue</span>
-                        <h4 className="text-3xl font-black text-white mt-1">₹1,45,280</h4>
+                      <div className="bg-bg-primary border border-border-custom p-4 rounded-2xl">
+                        <span className="text-[10px] text-text-secondary font-bold uppercase">Total Platform Revenue</span>
+                        <h4 className="text-3xl font-black text-text-primary mt-1">₹1,45,280</h4>
                       </div>
-                      <div className="bg-white/[0.01] border border-white/5 p-4 rounded-2xl">
-                        <span className="text-[10px] text-gray-500 font-bold uppercase">Monthly Recurring Revenue (MRR)</span>
-                        <h4 className="text-3xl font-black text-white mt-1">₹12,499</h4>
+                      <div className="bg-bg-primary border border-border-custom p-4 rounded-2xl">
+                        <span className="text-[10px] text-text-secondary font-bold uppercase">Monthly Recurring Revenue (MRR)</span>
+                        <h4 className="text-3xl font-black text-text-primary mt-1">₹12,499</h4>
                       </div>
-                      <div className="bg-white/[0.01] border border-white/5 p-4 rounded-2xl flex justify-between items-center">
+                      <div className="bg-bg-primary border border-border-custom p-4 rounded-2xl flex justify-between items-center">
                         <div>
-                          <span className="text-[10px] text-gray-500 font-bold uppercase">Active paid Plans</span>
-                          <h4 className="text-2xl font-black text-white mt-0.5">48</h4>
+                          <span className="text-[10px] text-text-secondary font-bold uppercase">Active paid Plans</span>
+                          <h4 className="text-2xl font-black text-text-primary mt-0.5">48</h4>
                         </div>
-                        <span className="text-emerald-400 text-xs font-semibold">+12% this mo</span>
+                        <span className="text-emerald-500 text-xs font-bold">+12% this mo</span>
                       </div>
                     </div>
                   </div>
 
                   {/* Pricing Rules Configuration */}
-                  <div className="rounded-3xl bg-white/5 border border-white/10 p-6 flex flex-col gap-6 shadow-xl">
+                  <div className="rounded-3xl bg-card-bg border border-border-custom p-6 flex flex-col gap-6 shadow-sm">
                     <div>
-                      <h3 className="text-sm font-semibold tracking-wide text-gray-400 uppercase">Pricing & Packages Rules</h3>
-                      <p className="text-gray-500 text-[10px] mt-1">Update package rates globally inside database.</p>
+                      <h3 className="text-sm font-extrabold tracking-wide text-text-secondary uppercase">Pricing & Packages Rules</h3>
+                      <p className="text-text-secondary text-[10px] mt-1 font-medium">Update package rates globally inside database.</p>
                     </div>
 
-                    <form onSubmit={handleSavePricing} className="flex flex-col gap-4">
+                    <form onSubmit={handleSavePricing} className="flex flex-col gap-4 text-xs font-bold text-text-secondary">
                       <div className="flex flex-col gap-1.5">
-                        <label className="text-xs font-semibold text-gray-400">Basic Package Price (₹)</label>
+                        <label className="text-text-primary">Basic Package Price (₹)</label>
                         <input 
                           type="number" 
                           value={basicPrice}
                           onChange={(e) => setBasicPrice(Number(e.target.value))}
-                          className="px-4 py-2 bg-white/5 border border-white/10 rounded-xl focus:border-indigo-500 focus:outline-none text-white text-xs font-mono"
+                          className="px-4 py-2.5 bg-bg-primary border border-border-custom rounded-xl focus:border-accent-custom focus:outline-none text-text-primary font-mono"
                         />
                       </div>
                       <div className="flex flex-col gap-1.5">
-                        <label className="text-xs font-semibold text-gray-400">Standard Package Price (₹)</label>
+                        <label className="text-text-primary">Standard Package Price (₹)</label>
                         <input 
                           type="number" 
                           value={standardPrice}
                           onChange={(e) => setStandardPrice(Number(e.target.value))}
-                          className="px-4 py-2 bg-white/5 border border-white/10 rounded-xl focus:border-indigo-500 focus:outline-none text-white text-xs font-mono"
+                          className="px-4 py-2.5 bg-bg-primary border border-border-custom rounded-xl focus:border-accent-custom focus:outline-none text-text-primary font-mono"
                         />
                       </div>
                       <div className="flex flex-col gap-1.5">
-                        <label className="text-xs font-semibold text-gray-400">Premium Package Price (₹)</label>
+                        <label className="text-text-primary">Premium Package Price (₹)</label>
                         <input 
                           type="number" 
                           value={premiumPrice}
                           onChange={(e) => setPremiumPrice(Number(e.target.value))}
-                          className="px-4 py-2 bg-white/5 border border-white/10 rounded-xl focus:border-indigo-500 focus:outline-none text-white text-xs font-mono"
+                          className="px-4 py-2.5 bg-bg-primary border border-border-custom rounded-xl focus:border-accent-custom focus:outline-none text-text-primary font-mono"
                         />
                       </div>
 
                       <button 
                         type="submit"
-                        className="w-full py-2.5 rounded-xl bg-[#10B981] hover:bg-[#059669] text-white font-semibold text-xs transition-all active:scale-[0.98] cursor-pointer"
+                        className="w-full py-3 rounded-xl bg-accent-custom hover:bg-accent-custom/90 text-white font-bold transition-all active:scale-[0.98] cursor-pointer"
                       >
                         Save Package Configurations
                       </button>
                     </form>
                     {pricingSuccess && (
-                      <div className="p-3 bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs rounded-xl text-center">
+                      <div className="p-3 bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 text-xs rounded-xl text-center font-bold">
                         ✓ Pricing parameters updated successfully!
                       </div>
                     )}
                   </div>
 
                   {/* Company Profile Settings Panel */}
-                  <div className="rounded-3xl bg-white/5 border border-white/10 p-6 flex flex-col gap-6 shadow-xl">
+                  <div className="rounded-3xl bg-card-bg border border-border-custom p-6 flex flex-col gap-6 shadow-sm">
                     <div>
-                      <h3 className="text-sm font-semibold tracking-wide text-gray-400 uppercase">Company Settings Panel</h3>
-                      <p className="text-gray-500 text-[10px] mt-1">Configure company credentials globally.</p>
+                      <h3 className="text-sm font-extrabold tracking-wide text-text-secondary uppercase">Company Settings Panel</h3>
+                      <p className="text-text-secondary text-[10px] mt-1 font-medium">Configure company credentials globally.</p>
                     </div>
 
-                    <form onSubmit={handleSaveCompany} className="flex flex-col gap-4">
+                    <form onSubmit={handleSaveCompany} className="flex flex-col gap-4 text-xs font-bold text-text-secondary">
                       <div className="flex flex-col gap-1.5">
-                        <label className="text-xs font-semibold text-gray-400">Founder & Director</label>
+                        <label className="text-text-primary">Founder & Director</label>
                         <input 
                           type="text" 
                           value={founderName}
                           onChange={(e) => setFounderName(e.target.value)}
-                          className="px-4 py-2 bg-[#07090e] border border-white/10 rounded-xl focus:border-indigo-500 focus:outline-none text-white text-xs font-mono"
+                          className="px-4 py-2.5 bg-bg-primary border border-border-custom rounded-xl focus:border-accent-custom focus:outline-none text-text-primary font-mono"
                         />
                       </div>
                       <div className="flex flex-col gap-1.5">
-                        <label className="text-xs font-semibold text-gray-400">Parent Company</label>
+                        <label className="text-text-primary">Parent Company</label>
                         <input 
                           type="text" 
                           value={parentCompany}
                           onChange={(e) => setParentCompany(e.target.value)}
-                          className="px-4 py-2 bg-[#07090e] border border-white/10 rounded-xl focus:border-indigo-500 focus:outline-none text-white text-xs font-mono"
+                          className="px-4 py-2.5 bg-bg-primary border border-border-custom rounded-xl focus:border-accent-custom focus:outline-none text-text-primary font-mono"
                         />
                       </div>
                       <div className="flex flex-col gap-1.5">
-                        <label className="text-xs font-semibold text-gray-400">Website URL</label>
+                        <label className="text-text-primary">Website URL</label>
                         <input 
                           type="url" 
                           value={websiteUrl}
                           onChange={(e) => setWebsiteUrl(e.target.value)}
-                          className="px-4 py-2 bg-[#07090e] border border-white/10 rounded-xl focus:border-indigo-500 focus:outline-none text-white text-xs font-mono"
+                          className="px-4 py-2.5 bg-bg-primary border border-border-custom rounded-xl focus:border-accent-custom focus:outline-none text-text-primary font-mono"
                         />
                       </div>
                       <div className="flex flex-col gap-1.5">
-                        <label className="text-xs font-semibold text-gray-400">Support Contact Phone</label>
+                        <label className="text-text-primary">Support Contact Phone</label>
                         <input 
                           type="text" 
                           value={supportPhone}
                           onChange={(e) => setSupportPhone(e.target.value)}
-                          className="px-4 py-2 bg-[#07090e] border border-white/10 rounded-xl focus:border-indigo-500 focus:outline-none text-white text-xs font-mono"
+                          className="px-4 py-2.5 bg-bg-primary border border-border-custom rounded-xl focus:border-accent-custom focus:outline-none text-text-primary font-mono"
                         />
                       </div>
                       <div className="flex flex-col gap-1.5">
-                        <label className="text-xs font-semibold text-gray-400">Physical Address</label>
+                        <label className="text-text-primary">Physical Address</label>
                         <input 
                           type="text" 
                           value={address}
                           onChange={(e) => setAddress(e.target.value)}
-                          className="px-4 py-2 bg-[#07090e] border border-white/10 rounded-xl focus:border-indigo-500 focus:outline-none text-white text-xs"
+                          className="px-4 py-2.5 bg-bg-primary border border-border-custom rounded-xl focus:border-accent-custom focus:outline-none text-text-primary"
                         />
                       </div>
 
                       <button 
                         type="submit"
-                        className="w-full py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-semibold text-xs transition-all active:scale-[0.98] cursor-pointer"
+                        className="w-full py-3 rounded-xl bg-accent-custom hover:bg-accent-custom/90 text-white font-bold transition-all active:scale-[0.98] cursor-pointer"
                       >
                         Save Company Profile
                       </button>
                     </form>
                     {companySuccess && (
-                      <div className="p-3 bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs rounded-xl text-center">
+                      <div className="p-3 bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 text-xs rounded-xl text-center font-bold">
                         ✓ Company profile updated globally!
                       </div>
                     )}
@@ -719,49 +723,49 @@ export default function AdminDashboard() {
 
                 {/* Right 8 Cols: Staff Manager Panel */}
                 <div className="lg:col-span-8 flex flex-col gap-6">
-                  <div className="rounded-3xl bg-white/5 border border-white/10 p-6 flex flex-col gap-6 shadow-xl">
+                  <div className="rounded-3xl bg-card-bg border border-border-custom p-6 flex flex-col gap-6 shadow-sm">
                     <div>
-                      <h3 className="text-base font-bold text-white">Staff Manager Panel</h3>
-                      <p className="text-gray-400 text-xs mt-1">Manage sub-admin staff credentials and authorization scopes.</p>
+                      <h3 className="text-base font-bold text-text-primary">Staff Manager Panel</h3>
+                      <p className="text-text-secondary text-xs mt-1 font-medium">Manage sub-admin staff credentials and authorization scopes.</p>
                     </div>
 
                     {/* Add new staff form */}
-                    <form onSubmit={handleAddStaff} className="flex flex-col sm:flex-row gap-4 bg-white/[0.01] p-4 rounded-2xl border border-white/5 items-end">
+                    <form onSubmit={handleAddStaff} className="flex flex-col sm:flex-row gap-4 bg-bg-primary p-4 rounded-2xl border border-border-custom items-end text-xs font-bold text-text-secondary">
                       <div className="flex-1 flex flex-col gap-1.5 w-full">
-                        <label className="text-xs font-semibold text-gray-400">Staff Full Name</label>
+                        <label className="text-text-primary font-bold">Staff Full Name</label>
                         <input 
                           type="text" 
                           required
                           placeholder="Anurag Dutta"
                           value={newStaffName}
                           onChange={(e) => setNewStaffName(e.target.value)}
-                          className="px-4 py-2 bg-[#07090e] border border-white/10 rounded-xl focus:border-indigo-500 focus:outline-none text-white text-xs"
+                          className="px-4 py-2.5 bg-card-bg border border-border-custom rounded-xl focus:border-accent-custom focus:outline-none text-text-primary"
                         />
                       </div>
                       <div className="flex-1 flex flex-col gap-1.5 w-full">
-                        <label className="text-xs font-semibold text-gray-400">Staff Email</label>
+                        <label className="text-text-primary font-bold">Staff Email</label>
                         <input 
                           type="email" 
                           required
                           placeholder="anurag@adgravity.ai"
                           value={newStaffEmail}
                           onChange={(e) => setNewStaffEmail(e.target.value)}
-                          className="px-4 py-2 bg-[#07090e] border border-white/10 rounded-xl focus:border-indigo-500 focus:outline-none text-white text-xs"
+                          className="px-4 py-2.5 bg-card-bg border border-border-custom rounded-xl focus:border-accent-custom focus:outline-none text-text-primary font-mono"
                         />
                       </div>
                       <button 
                         type="submit"
-                        className="py-2.5 px-6 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-semibold text-xs transition-all active:scale-[0.98] w-full sm:w-auto cursor-pointer"
+                        className="py-3 px-6 rounded-xl bg-accent-custom hover:bg-accent-custom/90 text-white font-bold transition-all active:scale-[0.98] w-full sm:w-auto cursor-pointer"
                       >
                         Add Sub-Admin
                       </button>
                     </form>
 
                     {/* Staff table */}
-                    <div className="overflow-x-auto border border-white/5 rounded-2xl bg-white/[0.01]">
+                    <div className="overflow-x-auto border border-border-custom rounded-2xl bg-bg-primary shadow-inner">
                       <table className="w-full text-left border-collapse text-xs">
                         <thead>
-                          <tr className="border-b border-white/5 text-gray-500 uppercase tracking-wider font-semibold bg-white/[0.02]">
+                          <tr className="border-b border-border-custom text-text-secondary uppercase tracking-wider font-extrabold bg-black/5 dark:bg-white/5">
                             <th className="p-4">Staff Name</th>
                             <th className="p-4">Email</th>
                             <th className="p-4">Access Level</th>
@@ -771,16 +775,20 @@ export default function AdminDashboard() {
                         </thead>
                         <tbody>
                           {staffList.map((staff) => (
-                            <tr key={staff.email} className="border-b border-white/5 hover:bg-white/[0.02] transition-colors">
-                              <td className="p-4 font-semibold text-white">{staff.name}</td>
-                              <td className="p-4 text-gray-400">{staff.email}</td>
-                              <td className="p-4"><span className="px-2 py-0.5 rounded bg-indigo-500/10 text-indigo-300 text-[10px] font-semibold">{staff.role}</span></td>
-                              <td className="p-4 text-gray-500">{staff.addedAt}</td>
+                            <tr key={staff.email} className="border-b border-border-custom hover:bg-black/5 dark:hover:bg-white/5 transition-colors font-medium">
+                              <td className="p-4 font-bold text-text-primary">{staff.name}</td>
+                              <td className="p-4 text-text-secondary font-mono">{staff.email}</td>
+                              <td className="p-4">
+                                <span className="px-2 py-0.5 rounded bg-accent-custom/10 text-accent-custom text-[10px] font-bold border border-accent-custom/25">
+                                  {staff.role}
+                                </span>
+                              </td>
+                              <td className="p-4 text-text-secondary">{staff.addedAt}</td>
                               <td className="p-4 text-right">
                                 <button 
                                   type="button"
                                   onClick={() => handleRevokeAccess(staff.email)}
-                                  className="text-red-400 hover:text-red-300 font-bold cursor-pointer"
+                                  className="text-red-500 hover:text-red-600 font-bold cursor-pointer"
                                 >
                                   Revoke Access
                                 </button>
@@ -822,81 +830,81 @@ export default function AdminDashboard() {
 
         {/* 2. SUB-ADMIN MODE (STAFF VIEW) */}
         {userRole === 'sub_admin' && (
-          <div className="flex flex-col gap-8">
+          <div className="flex flex-col gap-8 animate-fade-in">
             {/* Sub-Admin Sub-Tabs */}
-            <div className="flex border-b border-white/5 pb-1 gap-6 text-xs sm:text-sm overflow-x-auto no-scrollbar">
+            <div className="flex border-b border-border-custom pb-1 gap-6 text-xs sm:text-sm overflow-x-auto no-scrollbar font-bold">
               <button
                 onClick={() => setSubAdminTab('operations')}
-                className={`pb-3 font-semibold transition-all relative flex items-center gap-1.5 whitespace-nowrap cursor-pointer ${
-                  subAdminTab === 'operations' ? 'text-white font-bold' : 'text-gray-400 hover:text-white'
+                className={`pb-3 transition-all relative flex items-center gap-1.5 whitespace-nowrap cursor-pointer ${
+                  subAdminTab === 'operations' ? 'text-text-primary font-black' : 'text-text-secondary hover:text-text-primary'
                 }`}
               >
                 📋 Staff Operations
                 {subAdminTab === 'operations' && (
-                  <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-indigo-500 rounded-full" />
+                  <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-accent-custom rounded-full" />
                 )}
               </button>
               <button
                 onClick={() => setSubAdminTab('category')}
-                className={`pb-3 font-semibold transition-all relative flex items-center gap-1.5 whitespace-nowrap cursor-pointer ${
-                  subAdminTab === 'category' ? 'text-white font-bold' : 'text-gray-400 hover:text-white'
+                className={`pb-3 transition-all relative flex items-center gap-1.5 whitespace-nowrap cursor-pointer ${
+                  subAdminTab === 'category' ? 'text-text-primary font-black' : 'text-text-secondary hover:text-text-primary'
                 }`}
               >
                 🏷️ Category Manager
                 {subAdminTab === 'category' && (
-                  <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-indigo-500 rounded-full" />
+                  <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-accent-custom rounded-full" />
                 )}
               </button>
               <button
                 onClick={() => setSubAdminTab('seo_manager')}
-                className={`pb-3 font-semibold transition-all relative flex items-center gap-1.5 whitespace-nowrap cursor-pointer ${
-                  subAdminTab === 'seo_manager' ? 'text-white font-bold' : 'text-gray-400 hover:text-white'
+                className={`pb-3 transition-all relative flex items-center gap-1.5 whitespace-nowrap cursor-pointer ${
+                  subAdminTab === 'seo_manager' ? 'text-text-primary font-black' : 'text-text-secondary hover:text-text-primary'
                 }`}
               >
                 🚀 SEO Manager
                 {subAdminTab === 'seo_manager' && (
-                  <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-indigo-500 rounded-full" />
+                  <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-accent-custom rounded-full" />
                 )}
               </button>
               <button
                 onClick={() => setSubAdminTab('queue')}
-                className={`pb-3 font-semibold transition-all relative flex items-center gap-1.5 whitespace-nowrap cursor-pointer ${
-                  subAdminTab === 'queue' ? 'text-white font-bold' : 'text-gray-400 hover:text-white'
+                className={`pb-3 transition-all relative flex items-center gap-1.5 whitespace-nowrap cursor-pointer ${
+                  subAdminTab === 'queue' ? 'text-text-primary font-black' : 'text-text-secondary hover:text-text-primary'
                 }`}
               >
                 📋 Client Content Queue ({pendingQueue.length})
                 {subAdminTab === 'queue' && (
-                  <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-indigo-500 rounded-full" />
+                  <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-accent-custom rounded-full" />
                 )}
               </button>
             </div>
 
             {subAdminTab === 'operations' && (
-              <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start animate-fade-in">
                 {/* Left 4 Cols: Restricted metrics */}
                 <div className="lg:col-span-4 flex flex-col gap-6">
                   {/* Restricted Trial Metrics */}
-                  <div className="rounded-3xl bg-white/5 border border-white/10 p-6 flex flex-col gap-4 shadow-xl">
-                    <h3 className="text-sm font-semibold tracking-wide text-gray-400 uppercase">Restricted Trial Metrics</h3>
+                  <div className="rounded-3xl bg-card-bg border border-border-custom p-6 flex flex-col gap-4 shadow-sm">
+                    <h3 className="text-sm font-extrabold tracking-wide text-text-secondary uppercase">Restricted Trial Metrics</h3>
                     
-                    <div className="flex flex-col gap-3 mt-2 text-xs">
-                      <div className="flex justify-between items-center p-3 rounded-xl bg-white/[0.01] border border-white/5">
+                    <div className="flex flex-col gap-3 mt-2 text-xs font-semibold">
+                      <div className="flex justify-between items-center p-3 rounded-xl bg-bg-primary border border-border-custom">
                         <span>Total 7-Day Trials:</span>
-                        <strong className="text-white font-mono text-sm">142</strong>
+                        <strong className="text-text-primary font-mono text-sm">142</strong>
                       </div>
-                      <div className="flex justify-between items-center p-3 rounded-xl bg-white/[0.01] border border-white/5">
+                      <div className="flex justify-between items-center p-3 rounded-xl bg-bg-primary border border-border-custom">
                         <span>Active Users:</span>
-                        <strong className="text-white font-mono text-sm">89</strong>
+                        <strong className="text-text-primary font-mono text-sm">89</strong>
                       </div>
-                      <div className="flex justify-between items-center p-3 rounded-xl bg-white/[0.01] border border-white/5">
+                      <div className="flex justify-between items-center p-3 rounded-xl bg-bg-primary border border-border-custom">
                         <span>Trial Conversion Rate:</span>
-                        <strong className="text-indigo-400 font-mono text-sm">62%</strong>
+                        <strong className="text-accent-custom font-mono text-sm">62%</strong>
                       </div>
                     </div>
                   </div>
                   
                   {/* Info banner confirming hidden parameter */}
-                  <div className="p-4 bg-amber-500/10 border border-amber-500/20 text-amber-300 text-xs rounded-2xl leading-relaxed flex gap-2">
+                  <div className="p-4 bg-yellow-500/10 border border-yellow-500/20 text-yellow-800 dark:text-yellow-300 text-xs rounded-2xl leading-relaxed flex gap-2 font-medium">
                     <span className="text-base">🔒</span>
                     <div>
                       <strong>Financial Lock:</strong> Revenue statistics, invoice generation parameters, and subscription billing controls are disabled under your sub-admin login.
@@ -907,27 +915,27 @@ export default function AdminDashboard() {
                 {/* Right 8 Cols: Preset editor & slider replacement */}
                 <div className="lg:col-span-8 flex flex-col gap-6">
                   {/* Regional Festival Presets */}
-                  <div className="rounded-3xl bg-white/5 border border-white/10 p-6 flex flex-col gap-6 shadow-xl">
+                  <div className="rounded-3xl bg-card-bg border border-border-custom p-6 flex flex-col gap-6 shadow-sm">
                     <div>
-                      <h3 className="text-base font-bold text-white">Regional Festival presets</h3>
-                      <p className="text-gray-450 text-xs mt-1">Configure and push regional holiday ad copy templates directly to the canvas templates.</p>
+                      <h3 className="text-base font-bold text-text-primary">Regional Festival presets</h3>
+                      <p className="text-text-secondary text-xs mt-1 font-medium">Configure and push regional holiday ad copy templates directly to the canvas templates.</p>
                     </div>
 
-                    <form onSubmit={handlePushPreset} className="flex flex-col gap-4">
+                    <form onSubmit={handlePushPreset} className="flex flex-col gap-4 text-xs font-bold text-text-secondary">
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div className="flex flex-col gap-1.5">
-                          <label className="text-xs font-semibold text-gray-400">Preset Title</label>
+                          <label className="text-text-primary">Preset Title</label>
                           <input 
                             type="text" 
                             required
                             value={festivalPresetName}
                             onChange={(e) => setFestivalPresetName(e.target.value)}
-                            className="px-4 py-2.5 bg-white/5 border border-white/10 rounded-xl focus:border-indigo-500 focus:outline-none text-white text-xs"
+                            className="px-4 py-2.5 bg-bg-primary border border-border-custom rounded-xl focus:border-accent-custom focus:outline-none text-text-primary"
                           />
                         </div>
                         <div className="flex flex-col gap-1.5">
-                          <label className="text-xs font-semibold text-gray-400">Target Category</label>
-                          <select className="px-4 py-2.5 bg-[#0c0f18] border border-white/10 rounded-xl focus:border-indigo-500 focus:outline-none text-white text-xs">
+                          <label className="text-text-primary">Target Category</label>
+                          <select className="px-4 py-2.5 bg-bg-primary border border-border-custom rounded-xl focus:border-accent-custom focus:outline-none text-text-primary">
                             <option value="Cafe">Cafe / Restaurant</option>
                             <option value="Pharmacy">Pharmacy / Healthcare</option>
                             <option value="SaaS">SaaS Platform</option>
@@ -937,45 +945,45 @@ export default function AdminDashboard() {
                       </div>
 
                       <div className="flex flex-col gap-1.5">
-                        <label className="text-xs font-semibold text-gray-400">Preset Slogan</label>
+                        <label className="text-text-primary">Preset Slogan</label>
                         <textarea 
                           required
                           rows={2}
                           value={festivalSlogan}
                           onChange={(e) => setFestivalSlogan(e.target.value)}
-                          className="px-4 py-2.5 bg-white/5 border border-white/10 rounded-xl focus:border-indigo-500 focus:outline-none text-white text-xs resize-none"
+                          className="px-4 py-2.5 bg-bg-primary border border-border-custom rounded-xl focus:border-accent-custom focus:outline-none text-text-primary resize-none"
                         />
                       </div>
 
                       <button 
                         type="submit"
-                        className="w-full py-3 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-semibold text-xs transition-all active:scale-[0.98] cursor-pointer"
+                        className="w-full py-3 rounded-xl bg-accent-custom hover:bg-accent-custom/90 text-white font-bold transition-all active:scale-[0.98] cursor-pointer"
                       >
                         Publish Preset to Regional Clients
                       </button>
                     </form>
                     {presetSuccess && (
-                      <div className="p-3 bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs rounded-xl text-center">
+                      <div className="p-3 bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 text-xs rounded-xl text-center font-bold">
                         ✓ Festival preset published to database queues successfully!
                       </div>
                     )}
                   </div>
 
                   {/* Hero GIF replacer */}
-                  <div className="rounded-3xl bg-white/5 border border-white/10 p-6 flex flex-col gap-6 shadow-xl">
+                  <div className="rounded-3xl bg-card-bg border border-border-custom p-6 flex flex-col gap-6 shadow-sm">
                     <div>
-                      <h3 className="text-base font-bold text-white">Landing Page Hero GIF Replacer</h3>
-                      <p className="text-gray-450 text-xs mt-1">Replace animation slides on the landing page hero slider mockup.</p>
+                      <h3 className="text-base font-bold text-text-primary">Landing Page Hero GIF Replacer</h3>
+                      <p className="text-text-secondary text-xs mt-1 font-medium">Replace animation slides on the landing page hero slider mockup.</p>
                     </div>
 
-                    <form onSubmit={handleReplaceSlider} className="flex flex-col gap-4">
+                    <form onSubmit={handleReplaceSlider} className="flex flex-col gap-4 text-xs font-bold text-text-secondary">
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div className="flex flex-col gap-1.5">
-                          <label className="text-xs font-semibold text-gray-400">Select Mockup Slide</label>
+                          <label className="text-text-primary">Select Mockup Slide</label>
                           <select 
                             value={sliderIndex}
                             onChange={(e) => setSliderIndex(e.target.value)}
-                            className="px-4 py-2.5 bg-[#0c0f18] border border-white/10 rounded-xl focus:border-indigo-500 focus:outline-none text-white text-xs"
+                            className="px-4 py-2.5 bg-bg-primary border border-border-custom rounded-xl focus:border-accent-custom focus:outline-none text-text-primary"
                           >
                             <option value="1">Slide 1 (Reels rendering mockup)</option>
                             <option value="2">Slide 2 (Theme switcher mockup)</option>
@@ -983,27 +991,27 @@ export default function AdminDashboard() {
                           </select>
                         </div>
                         <div className="flex flex-col gap-1.5">
-                          <label className="text-xs font-semibold text-gray-400">New Animation GIF / Media URL</label>
+                          <label className="text-text-primary">New Animation GIF / Media URL</label>
                           <input 
                             type="url" 
                             required
                             placeholder="https://assets.adgravity.ai/animations/new-slide.gif"
                             value={sliderAssetUrl}
                             onChange={(e) => setSliderAssetUrl(e.target.value)}
-                            className="px-4 py-2.5 bg-white/5 border border-white/10 rounded-xl focus:border-indigo-500 focus:outline-none text-white text-xs font-mono"
+                            className="px-4 py-2.5 bg-bg-primary border border-border-custom rounded-xl focus:border-accent-custom focus:outline-none text-text-primary font-mono"
                           />
                         </div>
                       </div>
 
                       <button 
                         type="submit"
-                        className="w-full py-3 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-semibold text-xs transition-all active:scale-[0.98] cursor-pointer"
+                        className="w-full py-3 rounded-xl bg-accent-custom hover:bg-accent-custom/90 text-white font-bold transition-all active:scale-[0.98] cursor-pointer"
                       >
                         Deploy New Hero Asset
                       </button>
                     </form>
                     {assetSuccess && (
-                      <div className="p-3 bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs rounded-xl text-center">
+                      <div className="p-3 bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 text-xs rounded-xl text-center font-bold">
                         ✓ Hero mock slider asset replaced successfully!
                       </div>
                     )}
@@ -1027,20 +1035,20 @@ export default function AdminDashboard() {
 
       {/* Edit captions modal popup */}
       {editingItem && (
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-6 z-50 animate-fade-in">
-          <div className="w-full max-w-2xl bg-[#0c0f18] border border-white/10 rounded-3xl p-8 shadow-2xl relative">
-            <h3 className="text-lg font-bold text-white font-heading mb-2">
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-6 z-55 animate-fade-in">
+          <div className="w-full max-w-2xl bg-card-bg border border-border-custom rounded-3xl p-8 shadow-xl relative">
+            <h3 className="text-lg font-bold text-text-primary font-heading mb-2">
               Edit & Approve Campaign
             </h3>
-            <p className="text-gray-400 text-xs mb-6">
+            <p className="text-text-secondary text-xs mb-6 font-medium">
               Adjust the copies before final authorization and client dispatch.
             </p>
 
-            <form onSubmit={handleSaveAndApprove} className="flex flex-col gap-4 text-xs">
+            <form onSubmit={handleSaveAndApprove} className="flex flex-col gap-4 text-xs font-bold text-text-secondary">
               <div className="flex flex-col gap-1.5">
-                <label className="text-gray-400 font-semibold">English Social Caption</label>
+                <label className="text-text-primary">English Social Caption</label>
                 <textarea 
-                  className="px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 focus:border-indigo-500 focus:outline-none text-white text-xs resize-none" 
+                  className="px-4 py-2.5 rounded-xl bg-bg-primary border border-border-custom focus:border-accent-custom focus:outline-none text-text-primary text-xs resize-none" 
                   rows={4}
                   value={editCaptionEn}
                   onChange={(e) => setEditCaptionEn(e.target.value)}
@@ -1049,9 +1057,9 @@ export default function AdminDashboard() {
               </div>
 
               <div className="flex flex-col gap-1.5">
-                <label className="text-gray-400 font-semibold">Assamese Local Translation</label>
+                <label className="text-text-primary">Assamese Local Translation</label>
                 <textarea 
-                  className="px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 focus:border-indigo-500 focus:outline-none text-white text-xs resize-none" 
+                  className="px-4 py-2.5 rounded-xl bg-bg-primary border border-border-custom focus:border-accent-custom focus:outline-none text-text-primary text-xs resize-none" 
                   rows={4}
                   value={editCaptionAs}
                   onChange={(e) => setEditCaptionAs(e.target.value)}
@@ -1064,14 +1072,14 @@ export default function AdminDashboard() {
                   type="button" 
                   onClick={() => setEditingItem(null)} 
                   disabled={savingEdit}
-                  className="px-4 py-2.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-white font-bold transition-all cursor-pointer text-xs"
+                  className="px-4 py-2.5 rounded-xl bg-bg-primary border border-border-custom text-text-primary font-bold transition-all cursor-pointer text-xs"
                 >
                   Cancel
                 </button>
                 <button 
                   type="submit" 
                   disabled={savingEdit}
-                  className="px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold transition-all active:scale-[0.98] cursor-pointer text-xs"
+                  className="px-5 py-2.5 rounded-xl bg-accent-custom hover:bg-accent-custom/90 text-white font-bold transition-all active:scale-[0.98] cursor-pointer text-xs"
                 >
                   {savingEdit ? 'Saving & Approving...' : 'Save & Approve'}
                 </button>
@@ -1086,14 +1094,14 @@ export default function AdminDashboard() {
   // 3. RENDER CONTENT QUEUE TAB WORKSPACE
   function renderQueueWorkspace() {
     return (
-      <div className="flex flex-col gap-6">
+      <div className="flex flex-col gap-6 animate-fade-in">
         <div>
-          <h3 className="text-lg font-bold text-white">Global Client Content Queue</h3>
-          <p className="text-gray-400 text-xs mt-1">Pending client campaign copy creations requiring admin authorization.</p>
+          <h3 className="text-lg font-bold text-text-primary">Global Client Content Queue</h3>
+          <p className="text-text-secondary text-xs mt-1 font-medium">Pending client campaign copy creations requiring admin authorization.</p>
         </div>
 
         {pendingQueue.length === 0 ? (
-          <div className="rounded-3xl border border-white/5 bg-white/[0.01] p-12 text-center text-gray-500 italic text-xs">
+          <div className="rounded-3xl border border-border-custom bg-card-bg p-12 text-center text-text-secondary italic text-xs font-semibold">
             🎉 No pending campaigns in queue. All clean!
           </div>
         ) : (
@@ -1101,47 +1109,47 @@ export default function AdminDashboard() {
             {pendingQueue.map((item) => {
               const parsed = parseContent(item.ai_content);
               return (
-                <div key={item.id} className="rounded-3xl bg-white/5 border border-white/10 p-6 flex flex-col gap-5 shadow-xl relative overflow-hidden">
-                  <div className="flex justify-between items-start flex-wrap gap-4 border-b border-white/5 pb-4">
+                <div key={item.id} className="rounded-3xl bg-card-bg border border-border-custom p-6 flex flex-col gap-5 shadow-sm relative overflow-hidden">
+                  <div className="flex justify-between items-start flex-wrap gap-4 border-b border-border-custom pb-4">
                     <div>
-                      <strong className="text-sm font-bold text-white block">
+                      <strong className="text-sm font-bold text-text-primary block">
                         {item.users?.company_name || 'N/A Company'}
                       </strong>
-                      <span className="text-[10px] text-gray-500 font-mono">
+                      <span className="text-[10px] text-text-secondary font-mono">
                         Email: {item.users?.email || 'N/A'} | ID: {item.id.slice(0, 8)}
                       </span>
                     </div>
-                    <span className="px-2 py-0.5 rounded-full bg-amber-500/10 border border-amber-500/20 text-amber-400 text-[10px] font-bold uppercase tracking-wide">
+                    <span className="px-2 py-0.5 rounded-full bg-yellow-500/10 border border-yellow-500/20 text-yellow-600 text-[10px] font-bold uppercase tracking-wide">
                       AWAITING APPROVAL
                     </span>
                   </div>
 
-                  <div className="text-xs">
-                    <strong className="text-gray-500 font-bold uppercase tracking-wider block mb-1">Prompt</strong>
-                    <p className="text-gray-300 italic">"{item.prompt}"</p>
+                  <div className="text-xs font-semibold text-text-secondary">
+                    <strong className="text-text-primary font-bold uppercase tracking-wider block mb-1">Prompt</strong>
+                    <p className="italic">"{item.prompt}"</p>
                   </div>
 
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
-                    <div className="bg-[#07090e] p-4 rounded-xl border border-white/5">
-                      <strong className="text-indigo-400 font-bold block mb-2">ENGLISH CAPTION</strong>
-                      <p className="text-white leading-relaxed">{parsed.caption_en}</p>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs font-medium text-text-secondary">
+                    <div className="bg-bg-primary p-4 rounded-xl border border-border-custom">
+                      <strong className="text-accent-custom font-bold block mb-2">ENGLISH CAPTION</strong>
+                      <p className="text-text-primary leading-relaxed">{parsed.caption_en}</p>
                     </div>
-                    <div className="bg-[#07090e] p-4 rounded-xl border border-white/5">
-                      <strong className="text-violet-400 font-bold block mb-2">ASSAMESE TRANSCREATION</strong>
-                      <p className="text-white leading-relaxed">{parsed.caption_as}</p>
+                    <div className="bg-bg-primary p-4 rounded-xl border border-border-custom">
+                      <strong className="text-purple-600 dark:text-purple-300 font-bold block mb-2">ASSAMESE TRANSCREATION</strong>
+                      <p className="text-text-primary leading-relaxed">{parsed.caption_as}</p>
                     </div>
                   </div>
 
                   <div className="flex gap-3 justify-end pt-2">
                     <button 
                       onClick={() => openEditModal(item)} 
-                      className="px-4 py-2 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-white font-semibold text-xs cursor-pointer transition-all"
+                      className="px-4 py-2 rounded-xl bg-bg-primary hover:bg-black/5 border border-border-custom text-text-primary font-bold text-xs cursor-pointer transition-all"
                     >
                       Edit Captions
                     </button>
                     <button 
                       onClick={() => handleApproveContent(item.id)} 
-                      className="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-semibold text-xs cursor-pointer transition-all"
+                      className="px-4 py-2 rounded-xl bg-accent-custom hover:bg-accent-custom/90 text-white font-bold text-xs cursor-pointer transition-all shadow-sm"
                     >
                       Approve Post
                     </button>
@@ -1153,10 +1161,10 @@ export default function AdminDashboard() {
         )}
 
         {/* System Logs console */}
-        <div className="rounded-3xl bg-white/5 border border-white/10 p-6 flex flex-col gap-6 shadow-xl">
+        <div className="rounded-3xl bg-card-bg border border-border-custom p-6 flex flex-col gap-6 shadow-sm">
           <div>
-            <h4 className="text-base font-bold text-white">System Events Log Stream</h4>
-            <p className="text-gray-450 text-xs mt-1">Real-time feed of events, payment gateways, and content authorization alerts.</p>
+            <h4 className="text-base font-bold text-text-primary">System Events Log Stream</h4>
+            <p className="text-text-secondary text-xs mt-1 font-medium">Real-time feed of events, payment gateways, and content authorization alerts.</p>
           </div>
 
           <div className="flex flex-col gap-1.5 bg-[#030508] text-gray-300 font-mono text-[10px] p-5 rounded-2xl max-h-[300px] overflow-y-auto border border-white/5">

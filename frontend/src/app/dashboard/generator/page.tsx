@@ -3,8 +3,7 @@
 import { useState, useEffect, Suspense } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
-
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000';
+import ThemeToggle from '../../../components/ThemeToggle';
 
 // Translation Dictionaries for Category-based Vernacular content
 const translations: Record<string, Record<string, { slogan: string; copy: string; tags: string }>> = {
@@ -158,23 +157,21 @@ function GeneratorContent() {
   };
 
   const handleShareFacebook = () => {
-    // Facebook sharing on desktop requires URL target
     const mockSharedUrl = encodeURIComponent('https://ai.bhpproduction.com');
     window.open(`https://www.facebook.com/sharer/sharer.php?u=${mockSharedUrl}`, '_blank');
   };
 
   const handleShareInstagram = () => {
-    // Copy tags and launch Instagram
     handleCopyText();
     window.open('https://www.instagram.com', '_blank');
   };
 
   if (!profile) {
     return (
-      <div className="min-h-screen bg-[#07090e] text-gray-150 flex items-center justify-center">
+      <div className="min-h-screen bg-bg-primary text-text-secondary flex items-center justify-center transition-colors duration-300">
         <div className="flex flex-col items-center gap-4">
-          <div className="w-10 h-10 border-4 border-indigo-500/25 border-t-indigo-500 rounded-full animate-spin" />
-          <span className="text-xs text-gray-500 font-sans">Verifying editor security...</span>
+          <div className="w-10 h-10 border-4 border-accent-custom/20 border-t-accent-custom rounded-full animate-spin" />
+          <span className="text-xs font-semibold">Verifying editor security...</span>
         </div>
       </div>
     );
@@ -184,25 +181,28 @@ function GeneratorContent() {
   const initials = profile.businessName ? profile.businessName.split(' ').map((w: any) => w[0]).join('').substring(0, 2).toUpperCase() : 'AG';
 
   return (
-    <div className="min-h-screen bg-[#07090e] text-gray-100 flex flex-col font-sans selection:bg-indigo-500 selection:text-white pb-12">
+    <div className="min-h-screen bg-bg-primary text-text-primary flex flex-col font-sans selection:bg-accent-custom selection:text-white pb-12 transition-colors duration-300">
       {/* Top Navbar */}
-      <header className="w-full bg-[#0c0f18]/80 backdrop-blur-xl border-b border-white/5 sticky top-0 z-40">
+      <header className="w-full bg-card-bg/80 backdrop-blur-xl border-b border-border-custom sticky top-0 z-40 transition-colors duration-300">
         <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
           <div className="flex items-center gap-2 cursor-pointer" onClick={() => router.push('/dashboard')}>
-            <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-indigo-600 to-violet-500 flex items-center justify-center">
+            <div className="w-8 h-8 rounded-xl bg-accent-custom flex items-center justify-center shadow-sm">
               <span className="text-base font-bold text-white">A</span>
             </div>
-            <span className="text-lg font-semibold tracking-tight text-white font-heading">
-              AdGravity<span className="text-indigo-400">.AI</span> Editor
+            <span className="text-lg font-semibold tracking-tight text-text-primary font-heading">
+              AdGravity<span className="text-accent-custom">.AI</span> Editor
             </span>
           </div>
 
-          <button 
-            onClick={() => router.push('/dashboard')}
-            className="px-4 py-2 rounded-xl bg-white/5 hover:bg-white/10 text-white font-medium text-xs border border-white/10 transition-all active:scale-95"
-          >
-            ← Back to Dashboard
-          </button>
+          <div className="flex items-center gap-3">
+            <button 
+              onClick={() => router.push('/dashboard')}
+              className="px-4 py-2 rounded-xl bg-card-bg hover:bg-bg-primary text-text-primary font-semibold text-xs border border-border-custom transition-all active:scale-95 cursor-pointer shadow-sm select-none"
+            >
+              ← Back to Dashboard
+            </button>
+            <ThemeToggle />
+          </div>
         </div>
       </header>
 
@@ -211,43 +211,49 @@ function GeneratorContent() {
         
         {/* Left 5 Cols: Editor Controls */}
         <div className="lg:col-span-5 flex flex-col gap-6">
-          <div className="rounded-3xl bg-white/5 border border-white/10 p-6 flex flex-col gap-6 shadow-xl">
+          <div className="rounded-3xl bg-card-bg border border-border-custom p-6 flex flex-col gap-6 shadow-sm transition-colors duration-300">
             <div>
-              <h3 className="text-lg font-bold text-white">Ad Generator Tools</h3>
-              <p className="text-gray-400 text-xs mt-1">
+              <h3 className="text-lg font-bold text-text-primary font-heading">Ad Generator Tools</h3>
+              <p className="text-text-secondary text-xs mt-1">
                 Customize dimensions, copy content, and local languages.
               </p>
             </div>
 
             {/* Step 1: Aspect Ratio Selector */}
             <div className="flex flex-col gap-2">
-              <span className="text-xs font-semibold text-gray-400">1. Aspect Ratio Dimensions</span>
+              <span className="text-xs font-semibold text-text-secondary">1. Aspect Ratio Dimensions</span>
               <div className="grid grid-cols-3 gap-3">
                 <button
                   onClick={() => setAspectRatio('1:1')}
-                  className={`py-3 rounded-xl border flex flex-col items-center justify-center gap-1 transition-all ${
-                    aspectRatio === '1:1' ? 'bg-indigo-600/10 border-indigo-500 text-white font-semibold' : 'bg-white/[0.01] border-white/5 text-gray-400 hover:text-white'
+                  className={`py-3 rounded-xl border flex flex-col items-center justify-center gap-1.5 transition-all cursor-pointer ${
+                    aspectRatio === '1:1' 
+                      ? 'bg-accent-custom/5 border-accent-custom text-accent-custom font-bold' 
+                      : 'bg-card-bg border-border-custom text-text-secondary hover:text-text-primary'
                   }`}
                 >
-                  <span className="text-sm">⏹️</span>
+                  <span className="text-lg">⏹️</span>
                   <span className="text-[10px]">Square (1:1)</span>
                 </button>
                 <button
                   onClick={() => setAspectRatio('9:16')}
-                  className={`py-3 rounded-xl border flex flex-col items-center justify-center gap-1 transition-all ${
-                    aspectRatio === '9:16' ? 'bg-indigo-600/10 border-indigo-500 text-white font-semibold' : 'bg-white/[0.01] border-white/5 text-gray-400 hover:text-white'
+                  className={`py-3 rounded-xl border flex flex-col items-center justify-center gap-1.5 transition-all cursor-pointer ${
+                    aspectRatio === '9:16' 
+                      ? 'bg-accent-custom/5 border-accent-custom text-accent-custom font-bold' 
+                      : 'bg-card-bg border-border-custom text-text-secondary hover:text-text-primary'
                   }`}
                 >
-                  <span className="text-sm">📱</span>
+                  <span className="text-lg">📱</span>
                   <span className="text-[10px]">Vertical (9:16)</span>
                 </button>
                 <button
                   onClick={() => setAspectRatio('16:9')}
-                  className={`py-3 rounded-xl border flex flex-col items-center justify-center gap-1 transition-all ${
-                    aspectRatio === '16:9' ? 'bg-indigo-600/10 border-indigo-500 text-white font-semibold' : 'bg-white/[0.01] border-white/5 text-gray-400 hover:text-white'
+                  className={`py-3 rounded-xl border flex flex-col items-center justify-center gap-1.5 transition-all cursor-pointer ${
+                    aspectRatio === '16:9' 
+                      ? 'bg-accent-custom/5 border-accent-custom text-accent-custom font-bold' 
+                      : 'bg-card-bg border-border-custom text-text-secondary hover:text-text-primary'
                   }`}
                 >
-                  <span className="text-sm">📺</span>
+                  <span className="text-lg">📺</span>
                   <span className="text-[10px]">Landscape (16:9)</span>
                 </button>
               </div>
@@ -255,23 +261,23 @@ function GeneratorContent() {
 
             {/* Step 2: Language Vernacular Toggle */}
             <div className="flex flex-col gap-2">
-              <span className="text-xs font-semibold text-gray-400">2. Regional Vernacular Locale</span>
-              <div className="grid grid-cols-3 gap-2 bg-white/5 p-1 rounded-xl border border-white/10">
+              <span className="text-xs font-semibold text-text-secondary">2. Regional Vernacular Locale</span>
+              <div className="grid grid-cols-3 gap-1.5 bg-bg-primary p-1.5 rounded-xl border border-border-custom">
                 <button
                   onClick={() => setLanguage('en')}
-                  className={`py-2 rounded-lg text-xs font-semibold transition-all ${language === 'en' ? 'bg-indigo-600 text-white shadow' : 'text-gray-400 hover:text-white'}`}
+                  className={`py-2 rounded-lg text-xs font-bold transition-all cursor-pointer ${language === 'en' ? 'bg-accent-custom text-white shadow-sm' : 'text-text-secondary hover:text-text-primary'}`}
                 >
                   English
                 </button>
                 <button
                   onClick={() => setLanguage('as')}
-                  className={`py-2 rounded-lg text-xs font-semibold transition-all ${language === 'as' ? 'bg-indigo-600 text-white shadow' : 'text-gray-400 hover:text-white'}`}
+                  className={`py-2 rounded-lg text-xs font-bold transition-all cursor-pointer ${language === 'as' ? 'bg-accent-custom text-white shadow-sm' : 'text-text-secondary hover:text-text-primary'}`}
                 >
                   Assamese
                 </button>
                 <button
                   onClick={() => setLanguage('hi')}
-                  className={`py-2 rounded-lg text-xs font-semibold transition-all ${language === 'hi' ? 'bg-indigo-600 text-white shadow' : 'text-gray-400 hover:text-white'}`}
+                  className={`py-2 rounded-lg text-xs font-bold transition-all cursor-pointer ${language === 'hi' ? 'bg-accent-custom text-white shadow-sm' : 'text-text-secondary hover:text-text-primary'}`}
                 >
                   Hindi
                 </button>
@@ -281,8 +287,8 @@ function GeneratorContent() {
             {/* Step 3: Slogan Editor & 80-char Constraint */}
             <div className="flex flex-col gap-2">
               <div className="flex justify-between items-center text-xs">
-                <span className="font-semibold text-gray-400">3. Canvas Slogan Text</span>
-                <span className={`font-mono text-[10px] ${slogan.length >= 70 ? 'text-red-400' : slogan.length >= 50 ? 'text-yellow-400' : 'text-gray-500'}`}>
+                <span className="font-semibold text-text-secondary">3. Canvas Slogan Text</span>
+                <span className={`font-mono text-[10px] ${slogan.length >= 70 ? 'text-red-500 font-bold' : slogan.length >= 50 ? 'text-amber-500 font-bold' : 'text-text-secondary'}`}>
                   {slogan.length} / 80 Chars Max
                 </span>
               </div>
@@ -292,16 +298,16 @@ function GeneratorContent() {
                 value={slogan}
                 onChange={(e) => setSlogan(e.target.value)}
                 placeholder="Enter canvas slogan..."
-                className="px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 focus:border-indigo-500 focus:outline-none text-white text-xs transition-all font-sans"
+                className="px-4 py-2.5 rounded-xl bg-card-bg border border-border-custom focus:border-accent-custom focus:outline-none text-text-primary text-xs transition-all font-sans"
               />
             </div>
 
             {/* Step 4: Alternative AI Themes */}
             <div className="flex flex-col gap-2">
-              <span className="text-xs font-semibold text-gray-400">4. AI Aesthetic Themes</span>
+              <span className="text-xs font-semibold text-text-secondary">4. AI Aesthetic Themes</span>
               <button
                 onClick={handleRegenerateTheme}
-                className="w-full py-3 rounded-xl bg-white/5 hover:bg-white/10 text-white border border-white/10 font-semibold text-xs transition-all active:scale-[0.98] flex items-center justify-center gap-2"
+                className="w-full py-3 rounded-xl bg-card-bg hover:bg-bg-primary text-text-primary border border-border-custom font-bold text-xs transition-all active:scale-[0.98] flex items-center justify-center gap-2 cursor-pointer shadow-sm select-none"
               >
                 🔄 Cycle Design Style ({activeTheme.name})
               </button>
@@ -309,25 +315,25 @@ function GeneratorContent() {
           </div>
 
           {/* Copywriting Preview & Copy Panel */}
-          <div className="rounded-3xl bg-white/5 border border-white/10 p-6 flex flex-col gap-4 shadow-xl">
-            <div className="flex justify-between items-center border-b border-white/5 pb-2">
-              <h4 className="text-xs font-bold text-indigo-400 uppercase tracking-widest">Copywriter Copy & Tags</h4>
+          <div className="rounded-3xl bg-card-bg border border-border-custom p-6 flex flex-col gap-4 shadow-sm transition-colors duration-300">
+            <div className="flex justify-between items-center border-b border-border-custom pb-2">
+              <h4 className="text-xs font-bold text-accent-custom uppercase tracking-wider">Copywriter Copy & Tags</h4>
               <button 
                 onClick={handleCopyText}
-                className="text-[10px] font-bold text-gray-400 hover:text-white flex items-center gap-1"
+                className="text-[10px] font-bold text-text-secondary hover:text-text-primary flex items-center gap-1 cursor-pointer"
               >
                 📋 {copySuccess ? 'Copied!' : 'Copy All'}
               </button>
             </div>
 
-            <div className="flex flex-col gap-3 text-xs bg-white/[0.01] border border-white/5 p-4 rounded-2xl">
+            <div className="flex flex-col gap-3 text-xs bg-bg-primary border border-border-custom p-4 rounded-2xl">
               <div>
-                <span className="text-[10px] text-gray-500 font-semibold uppercase block mb-1">Body Text</span>
-                <p className="text-gray-300 leading-relaxed font-sans">{copywriterText}</p>
+                <span className="text-[10px] text-text-secondary font-bold uppercase block mb-1">Body Text</span>
+                <p className="text-text-primary leading-relaxed font-sans">{copywriterText}</p>
               </div>
-              <div className="border-t border-white/5 pt-2">
-                <span className="text-[10px] text-gray-500 font-semibold uppercase block mb-1">Hashtags</span>
-                <p className="text-gray-400 font-mono">{tagsText}</p>
+              <div className="border-t border-border-custom pt-2">
+                <span className="text-[10px] text-text-secondary font-bold uppercase block mb-1">Hashtags</span>
+                <p className="text-text-secondary font-mono">{tagsText}</p>
               </div>
             </div>
           </div>
@@ -337,10 +343,10 @@ function GeneratorContent() {
         <div className="lg:col-span-7 flex flex-col gap-8 items-center w-full">
           
           {/* Dynamic Graphic Canvas container */}
-          <div className="w-full bg-black/60 rounded-3xl border border-white/10 p-8 flex items-center justify-center shadow-2xl min-h-[420px]">
+          <div className="w-full bg-bg-primary rounded-3xl border border-border-custom p-8 flex items-center justify-center shadow-sm min-h-[420px] transition-colors duration-300">
             {/* The responsive ratio box */}
             <div 
-              className={`rounded-2xl bg-gradient-to-tr ${activeTheme.class} border border-white/15 p-6 flex flex-col justify-between transition-all duration-700 relative shadow-lg shadow-indigo-500/5 ${
+              className={`rounded-2xl bg-gradient-to-tr ${activeTheme.class} border border-white/20 p-6 flex flex-col justify-between transition-all duration-700 relative shadow-lg ${
                 aspectRatio === '1:1' ? 'w-64 h-64' :
                 aspectRatio === '9:16' ? 'w-48 h-80' :
                 'w-80 h-48'
@@ -367,22 +373,22 @@ function GeneratorContent() {
                 ) : (
                   <div className="w-8 h-8 rounded-lg bg-indigo-600 flex items-center justify-center font-bold text-white text-[10px]">{initials}</div>
                 )}
-                <span className="text-[7px] text-gray-500 uppercase tracking-widest font-mono">AdGravity.AI</span>
+                <span className="text-[7px] text-white/50 uppercase tracking-widest font-mono select-none">AdGravity.AI</span>
               </div>
 
               {/* Slogan Text Canvas Overlay */}
               <div className="my-auto py-2 text-center">
                 <h2 className={`font-heading font-black tracking-tight text-white leading-tight ${
-                  aspectRatio === '9:16' ? 'text-sm' :
-                  aspectRatio === '1:1' ? 'text-base' :
-                  'text-lg'
+                  aspectRatio === '9:16' ? 'text-xs' :
+                  aspectRatio === '1:1' ? 'text-sm' :
+                  'text-base'
                 }`}>
                   {slogan || 'Your Ad Copy Here'}
                 </h2>
               </div>
 
               {/* Sub-label */}
-              <div className="flex justify-between items-center text-[7px] text-gray-400 font-medium border-t border-white/5 pt-2">
+              <div className="flex justify-between items-center text-[7px] text-white/60 font-medium border-t border-white/10 pt-2 select-none">
                 <span>{profile.businessName}</span>
                 <span className="uppercase">{profile.category}</span>
               </div>
@@ -390,10 +396,10 @@ function GeneratorContent() {
           </div>
 
           {/* Approve & Manual Deep-link Sharing Engine */}
-          <div className="w-full rounded-3xl bg-white/5 border border-white/10 p-6 flex flex-col gap-6 shadow-xl">
+          <div className="w-full rounded-3xl bg-card-bg border border-border-custom p-6 flex flex-col gap-6 shadow-sm transition-colors duration-300">
             <div>
-              <h3 className="text-base font-bold text-white">Approve & Share Module</h3>
-              <p className="text-gray-450 text-xs mt-1">
+              <h3 className="text-base font-bold text-text-primary font-heading">Approve & Share Module</h3>
+              <p className="text-text-secondary text-xs mt-1">
                 Bypass auto-publishing and trigger native device apps with pre-loaded assets.
               </p>
             </div>
@@ -402,7 +408,7 @@ function GeneratorContent() {
               {/* WhatsApp */}
               <button
                 onClick={handleShareWhatsApp}
-                className="py-3 px-4 rounded-xl bg-[#25d366]/10 hover:bg-[#25d366]/20 border border-[#25d366]/20 text-[#25d366] font-semibold text-xs flex items-center justify-center gap-2 transition-all active:scale-[0.98]"
+                className="py-3 px-4 rounded-xl bg-[#25d366]/10 hover:bg-[#25d366]/20 border border-[#25d366]/20 text-[#25d366] font-bold text-xs flex items-center justify-center gap-2 transition-all active:scale-[0.98] cursor-pointer shadow-sm"
               >
                 <span className="text-base">💬</span>
                 WhatsApp Business
@@ -411,7 +417,7 @@ function GeneratorContent() {
               {/* Facebook */}
               <button
                 onClick={handleShareFacebook}
-                className="py-3 px-4 rounded-xl bg-[#1877f2]/10 hover:bg-[#1877f2]/20 border border-[#1877f2]/20 text-[#1877f2] font-semibold text-xs flex items-center justify-center gap-2 transition-all active:scale-[0.98]"
+                className="py-3 px-4 rounded-xl bg-[#1877f2]/10 hover:bg-[#1877f2]/20 border border-[#1877f2]/20 text-[#1877f2] font-bold text-xs flex items-center justify-center gap-2 transition-all active:scale-[0.98] cursor-pointer shadow-sm"
               >
                 <span className="text-base">👥</span>
                 Share to Facebook
@@ -420,14 +426,14 @@ function GeneratorContent() {
               {/* Instagram */}
               <button
                 onClick={handleShareInstagram}
-                className="py-3 px-4 rounded-xl bg-[#c13584]/10 hover:bg-[#c13584]/20 border border-[#c13584]/20 text-[#c13584] font-semibold text-xs flex items-center justify-center gap-2 transition-all active:scale-[0.98]"
+                className="py-3 px-4 rounded-xl bg-[#c13584]/10 hover:bg-[#c13584]/20 border border-[#c13584]/20 text-[#c13584] font-bold text-xs flex items-center justify-center gap-2 transition-all active:scale-[0.98] cursor-pointer shadow-sm"
               >
                 <span className="text-base">📸</span>
                 Copy & Open Instagram
               </button>
             </div>
             
-            <div className="text-[10px] text-gray-500 font-sans leading-relaxed border-t border-white/5 pt-4 text-center">
+            <div className="text-[10px] text-text-secondary font-sans leading-relaxed border-t border-border-custom pt-4 text-center">
               ⚠️ <strong>Note:</strong> Clicking Instagram/Facebook triggers copies your copywriting to your clipboard automatically. You can paste it directly when the native app opens.
             </div>
           </div>
@@ -440,10 +446,10 @@ function GeneratorContent() {
 export default function GeneratorPage() {
   return (
     <Suspense fallback={
-      <div className="min-h-screen bg-[#07090e] text-gray-100 flex items-center justify-center">
+      <div className="min-h-screen bg-bg-primary text-text-secondary flex items-center justify-center">
         <div className="flex flex-col items-center gap-4">
-          <div className="w-10 h-10 border-4 border-indigo-500/25 border-t-indigo-500 rounded-full animate-spin" />
-          <span className="text-xs text-gray-505">Loading Ad Editor...</span>
+          <div className="w-10 h-10 border-4 border-accent-custom/20 border-t-accent-custom rounded-full animate-spin" />
+          <span className="text-xs font-semibold">Loading Ad Editor...</span>
         </div>
       </div>
     }>
