@@ -2,6 +2,26 @@
 
 import { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
+import dynamic from 'next/dynamic';
+import Image from 'next/image';
+
+const DashboardMetricsCard = dynamic(() => import('./DashboardMetrics').then(mod => mod.DashboardMetricsCard), {
+  loading: () => (
+    <div className="w-full h-32 bg-white/5 border border-white/10 rounded-3xl animate-pulse flex items-center justify-center text-xs text-gray-500">
+      Loading Credit Status...
+    </div>
+  ),
+  ssr: false,
+});
+
+const DashboardCalendarCard = dynamic(() => import('./DashboardMetrics').then(mod => mod.DashboardCalendarCard), {
+  loading: () => (
+    <div className="w-full h-[320px] bg-white/5 border border-white/10 rounded-3xl animate-pulse flex items-center justify-center text-xs text-gray-500">
+      Loading History Calendar...
+    </div>
+  ),
+  ssr: false,
+});
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000';
 
@@ -538,7 +558,15 @@ function DashboardContent() {
                       <span className="text-white font-black text-xl">{getInitials()}</span>
                     </div>
                   ) : (
-                    <img src={finalizedLogo} alt="Finalized Logo" className="w-20 h-20 rounded-2xl object-cover border border-white/10" />
+                    <Image 
+                      src={finalizedLogo} 
+                      alt="Finalized Logo" 
+                      width={80} 
+                      height={80} 
+                      className="rounded-2xl object-cover border border-white/10" 
+                      placeholder="blur"
+                      blurDataURL="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI4MCIgaGVpZ2h0PSI4MCI+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0iIzFhMWYyZSIvPjwvc3ZnPg=="
+                    />
                   )}
                   <span className="text-[10px] text-emerald-400 font-bold flex items-center gap-1">
                     🔒 Logo Locked & Finalized
@@ -553,27 +581,7 @@ function DashboardContent() {
             </div>
           </div>
 
-          <div className="rounded-3xl bg-white/5 border border-white/10 p-6 flex flex-col gap-4 shadow-xl">
-            <div className="flex justify-between items-center">
-              <h3 className="text-sm font-semibold tracking-wide text-gray-400 uppercase">Visual Credit Tracker</h3>
-              <span className={`text-xs ${theme.text} font-bold`}>Daily Reset</span>
-            </div>
-            <div className="flex items-baseline gap-1.5 mt-2">
-              <span className="text-5xl font-black text-white">{credits}</span>
-              <span className="text-lg text-gray-500 font-medium">/ {maxCredits}</span>
-            </div>
-            <div className="flex flex-col gap-1.5 mt-2">
-              <div className="w-full h-2.5 bg-white/10 rounded-full overflow-hidden">
-                <div 
-                  className="h-full transition-all duration-500" 
-                  style={{ width: `${(credits / maxCredits) * 100}%`, backgroundColor: getColorHex() }}
-                />
-              </div>
-              <span className="text-[10px] text-gray-455 mt-1">
-                {credits > 0 ? 'Use your credit to generate bilingual ad copies.' : 'Credits depleted. Start a ₹1 trial to replenish!'}
-              </span>
-            </div>
-          </div>
+          <DashboardMetricsCard credits={credits} maxCredits={maxCredits} theme={theme} />
         </div>
 
         {/* Right 8 Cols: AI Logo generator, AI ad Generator, Calendar Grid */}
@@ -618,7 +626,14 @@ function DashboardContent() {
                 </label>
                 {uploadedLogoUrl && (
                   <div className="w-10 h-10 rounded border border-white/10 overflow-hidden relative">
-                    <img src={uploadedLogoUrl} alt="custom logo preview" className="w-full h-full object-cover" />
+                    <Image 
+                      src={uploadedLogoUrl} 
+                      alt="custom logo preview" 
+                      width={40} 
+                      height={40} 
+                      className="w-full h-full object-cover" 
+                      unoptimized 
+                    />
                   </div>
                 )}
               </div>
@@ -708,55 +723,7 @@ function DashboardContent() {
             )}
           </div>
 
-          {/* Post History Calendar Grid */}
-          <div className="rounded-3xl bg-white/5 border border-white/10 p-6 flex flex-col gap-6 shadow-xl">
-            <div>
-              <h3 className="text-lg font-bold text-white">Post History Calendar</h3>
-              <p className="text-gray-400 text-xs mt-1">
-                Track your active, pending, and scheduled campaigns.
-              </p>
-            </div>
-
-            <div className="flex flex-col gap-4">
-              <div className="flex justify-between items-center text-xs text-gray-400 font-semibold px-2">
-                <span>June 2026</span>
-                <span className="flex gap-4">
-                  <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-emerald-500" /> Published</span>
-                  <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-amber-500" /> Pending</span>
-                  <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-indigo-500" /> Scheduled</span>
-                </span>
-              </div>
-
-              {/* Grid 7 Columns for Days */}
-              <div className="grid grid-cols-7 gap-2 text-center text-xs">
-                {['S', 'M', 'T', 'W', 'T', 'F', 'S'].map((day) => (
-                  <div key={day} className="text-gray-500 font-bold py-1">{day}</div>
-                ))}
-                
-                {Array.from({ length: 30 }).map((_, index) => {
-                  const day = index + 1;
-                  const activePost = calendarPosts.find((p) => p.day === day);
-                  
-                  return (
-                    <div 
-                      key={day} 
-                      className={`aspect-square rounded-lg flex flex-col items-center justify-between p-1.5 relative border ${
-                        activePost?.status === 'published' ? 'bg-emerald-950/20 border-emerald-500/30 text-emerald-300' :
-                        activePost?.status === 'pending' ? 'bg-amber-950/20 border-amber-500/30 text-amber-300' :
-                        activePost?.status === 'scheduled' ? `bg-${theme.accent}-950/20 border-${theme.accent}-500/30 text-${theme.accent}-300` :
-                        'bg-white/[0.01] border-white/5 text-gray-505 hover:bg-white/5'
-                      }`}
-                    >
-                      <span className="font-semibold self-start text-[10px]">{day}</span>
-                      {activePost && (
-                        <div className="w-1.5 h-1.5 rounded-full bg-current absolute bottom-1.5 right-1.5" title={activePost.name} />
-                      )}
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-          </div>
+          <DashboardCalendarCard theme={theme} />
 
           {/* Content Queue List */}
           <div className="rounded-3xl bg-white/5 border border-white/10 p-6 flex flex-col gap-6 shadow-xl">

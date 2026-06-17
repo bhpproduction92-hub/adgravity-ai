@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import Image from 'next/image';
 
 export default function LandingPage() {
   const router = useRouter();
@@ -60,11 +61,11 @@ export default function LandingPage() {
   }, [activeSimTab]);
 
   const partnerLogos = [
-    { name: 'Prarthana Hospital', icon: '🏥' },
-    { name: 'Dreams Hospital', icon: '🩺' },
-    { name: 'Sygnush Hospital', icon: '🧬' },
-    { name: 'MedCity Care', icon: '❤️' },
-    { name: 'Assam Medical Centre', icon: '🔬' }
+    { name: 'Prarthana Hospital', src: 'https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?auto=format&fit=crop&w=64&h=64&q=80' },
+    { name: 'Dreams Hospital', src: 'https://images.unsplash.com/photo-1505751172876-fa1923c5c528?auto=format&fit=crop&w=64&h=64&q=80' },
+    { name: 'Sygnush Hospital', src: 'https://images.unsplash.com/photo-1581594693702-fbdc51b2763b?auto=format&fit=crop&w=64&h=64&q=80' },
+    { name: 'MedCity Care', src: 'https://images.unsplash.com/photo-1629909613654-28e377c37b09?auto=format&fit=crop&w=64&h=64&q=80' },
+    { name: 'Assam Medical Centre', src: 'https://images.unsplash.com/photo-1584515979956-d9f6e5d09982?auto=format&fit=crop&w=64&h=64&q=80' }
   ];
 
   return (
@@ -172,17 +173,29 @@ export default function LandingPage() {
               {activeSimTab === 'reels' && (
                 <div className="w-40 aspect-[9/16] rounded-2xl border border-white/10 bg-black/60 overflow-hidden flex flex-col relative shadow-xl">
                   {/* Mock Video content */}
-                  <div className="flex-1 bg-gradient-to-b from-indigo-950 via-[#0B0F19] to-indigo-950 flex flex-col justify-end p-3 gap-2">
+                  <div className="flex-1 bg-gradient-to-b from-indigo-950 via-[#0B0F19] to-indigo-950 flex flex-col justify-end p-3 gap-2 relative">
+                    <Image 
+                      src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=160&h=280&q=80"
+                      alt="AI Reels loop"
+                      width={160}
+                      height={280}
+                      className="absolute inset-0 object-cover w-full h-full opacity-60 mix-blend-luminosity"
+                      priority
+                      placeholder="blur"
+                      blurDataURL="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNjAiIGhlaWdodD0iMjgwIj48cmVjdCB3aWR0aD0iMTAwJSIgZmlsbD0iIzFhMWYyZSIvPjwvc3ZnPg=="
+                    />
                     {/* Live overlay */}
-                    <div className="absolute top-2 left-2 flex items-center gap-1 bg-red-600 text-[8px] font-bold text-white px-1.5 py-0.5 rounded">
+                    <div className="absolute top-2 left-2 flex items-center gap-1 bg-red-600 text-[8px] font-bold text-white px-1.5 py-0.5 rounded z-10">
                       <span className="w-1 h-1 rounded-full bg-white animate-pulse" /> LIVE PREVIEW
                     </div>
                     {/* Text box */}
-                    <div className="h-6 w-full rounded bg-white/10 animate-pulse" />
-                    <div className="h-4 w-4/5 rounded bg-white/10 animate-pulse" />
+                    <div className="h-6 w-full rounded bg-black/40 backdrop-blur border border-white/5 p-1 z-10 text-[8px] font-mono text-gray-300 overflow-hidden">
+                      Guwahati local discount ad copy...
+                    </div>
+                    <div className="h-4 w-4/5 rounded bg-black/40 backdrop-blur border border-white/5 z-10" />
                     
                     {/* Render status */}
-                    <div className="mt-2 flex flex-col gap-1.5">
+                    <div className="mt-2 flex flex-col gap-1.5 z-10">
                       <div className="flex justify-between text-[8px] text-gray-400">
                         <span>Rendering Video...</span>
                         <span>{reelsProgress}%</span>
@@ -282,7 +295,17 @@ export default function LandingPage() {
           <div className="animate-scroll flex gap-16 items-center">
             {partnerLogos.concat(partnerLogos).map((logo, index) => (
               <div key={index} className="flex items-center gap-3 text-gray-400 hover:text-indigo-300 transition-colors cursor-pointer select-none">
-                <span className="text-2xl">{logo.icon}</span>
+                <div className="w-8 h-8 rounded-lg overflow-hidden border border-white/5 relative">
+                  <Image 
+                    src={logo.src || ''} 
+                    alt={logo.name} 
+                    width={32} 
+                    height={32} 
+                    className="object-cover w-full h-full filter grayscale hover:grayscale-0 transition-all duration-300"
+                    placeholder="blur"
+                    blurDataURL="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMiIgaGVpZ2h0PSIzMiI+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0iIzFhMWYyZSIvPjwvc3ZnPg=="
+                  />
+                </div>
                 <span className="text-base font-bold tracking-tight font-heading">{logo.name}</span>
               </div>
             ))}

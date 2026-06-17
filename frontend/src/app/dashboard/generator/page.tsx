@@ -2,6 +2,7 @@
 
 import { useState, useEffect, Suspense } from 'react';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000';
 
@@ -352,7 +353,15 @@ function GeneratorContent() {
                     {finalizedLogo.startsWith('AI_LOGO_') ? (
                       <span className="text-white text-[9px] font-black">{initials}</span>
                     ) : (
-                      <img src={finalizedLogo} alt="brand logo" className="w-full h-full object-cover rounded-lg" />
+                      <Image 
+                        src={finalizedLogo} 
+                        alt="brand logo" 
+                        width={32} 
+                        height={32} 
+                        className="w-full h-full object-cover rounded-lg" 
+                        placeholder="blur"
+                        blurDataURL="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMiIgaGVpZ2h0PSIzMiI+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0iIzFhMWYyZSIvPjwvc3ZnPg=="
+                      />
                     )}
                   </div>
                 ) : (
