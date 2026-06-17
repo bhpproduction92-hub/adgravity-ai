@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 
 export default function LandingPage() {
   const router = useRouter();
@@ -462,10 +463,12 @@ export default function LandingPage() {
       {/* Footer */}
       <footer className="w-full max-w-7xl mx-auto px-6 py-8 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-gray-500">
         <span>&copy; {new Date().getFullYear()} AdGravity AI. All rights reserved.</span>
-        <div className="flex gap-4">
-          <a href="#" className="hover:text-white transition-colors">Privacy Policy</a>
-          <a href="#" className="hover:text-white transition-colors">Terms of Service</a>
-          <a href="#" className="hover:text-white transition-colors">Support Desk</a>
+        <div className="flex flex-wrap gap-4 justify-center md:justify-end">
+          <Link href="/about" className="hover:text-white transition-colors">About Us</Link>
+          <Link href="/privacy-policy" className="hover:text-white transition-colors">Privacy Policy</Link>
+          <Link href="/terms" className="hover:text-white transition-colors">Terms of Service</Link>
+          <Link href="/refund-policy" className="hover:text-white transition-colors">Refund Policy</Link>
+          <Link href="/contact" className="hover:text-white transition-colors">Support Desk</Link>
         </div>
       </footer>
     </div>

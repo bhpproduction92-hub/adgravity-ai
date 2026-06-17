@@ -2,6 +2,7 @@
 
 import { useState, useEffect, Suspense } from 'react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000';
 
@@ -315,9 +316,9 @@ function SettingsContent() {
                   
                   <div className="flex flex-col gap-2 border-t border-white/5 pt-3 text-xs text-gray-400">
                     <span className="font-semibold text-gray-500 text-[10px] uppercase">Compliance Documents</span>
-                    <div className="flex justify-between">
-                      <a href="#" className="hover:text-white transition-colors">Terms of Service Agreement</a>
-                      <a href="#" className="hover:text-white transition-colors">Privacy Policy Statement</a>
+                    <div className="flex justify-between gap-4">
+                      <Link href="/terms" className="hover:text-white transition-colors">Terms of Service Agreement</Link>
+                      <Link href="/privacy-policy" className="hover:text-white transition-colors">Privacy Policy Statement</Link>
                     </div>
                   </div>
                 </div>
