@@ -141,7 +141,7 @@ export default function OnboardingPage() {
   return (
     <div className="min-h-screen bg-bg-primary text-text-primary flex flex-col font-sans transition-colors duration-300 font-urbanist pb-12">
       {/* Top Navbar */}
-      <header className="w-full bg-card-bg border-b border-border-custom sticky top-0 z-40 shadow-sm">
+      <header className="w-full bg-card-bg border-b border-border-custom sticky top-0 z-40 shadow-[0_10px_35px_rgba(0,0,0,0.05)]">
         <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
           <div className="flex items-center gap-2.5 cursor-pointer" onClick={() => router.push('/')}>
             <div className="w-8 h-8 rounded-xl bg-accent-custom flex items-center justify-center text-white font-extrabold text-sm shadow-sm">
@@ -160,7 +160,7 @@ export default function OnboardingPage() {
         
         {/* Step 1: PROFILE SETUP */}
         {step === 'profile' && (
-          <div className="w-full max-w-xl bg-card-bg border border-border-custom rounded-3xl p-8 shadow-xl animate-fade-in">
+          <div className="w-full max-w-xl bg-card-bg border border-border-custom rounded-3xl p-8 shadow-[0_8px_30px_rgba(0,0,0,0.04)] animate-fade-in">
             <div className="flex flex-col items-center gap-2 mb-8 text-center">
               <span className="text-[10px] uppercase tracking-widest text-accent-custom font-extrabold">Step 1 of 3</span>
               <h1 className="text-2xl font-black text-text-primary font-heading">
@@ -343,7 +343,7 @@ export default function OnboardingPage() {
 
         {/* Step 2: AI LOGO GENERATION */}
         {step === 'logo_generation' && (
-          <div className="w-full max-w-2xl bg-card-bg border border-border-custom rounded-3xl p-8 shadow-xl animate-fade-in">
+          <div className="w-full max-w-2xl bg-card-bg border border-border-custom rounded-3xl p-8 shadow-[0_8px_30px_rgba(0,0,0,0.04)] animate-fade-in">
             <div className="flex flex-col items-center gap-2 mb-8 text-center">
               <span className="text-[10px] uppercase tracking-widest text-accent-custom font-extrabold">Step 2 of 3</span>
               <h1 className="text-2xl font-black text-text-primary font-heading">
@@ -360,10 +360,10 @@ export default function OnboardingPage() {
               {/* Option 1: Blue clean monogram */}
               <button
                 onClick={() => setLogoOption('ai_1')}
-                className={`aspect-square rounded-2xl border-2 flex flex-col items-center justify-center p-4 transition-all relative ${
+                className={`aspect-square rounded-2xl border flex flex-col items-center justify-center p-4 transition-all duration-300 relative hover:-translate-y-1 hover:shadow-[0_10px_40px_rgba(0,0,0,0.08)] shadow-[0_8px_30px_rgba(0,0,0,0.04)] ${
                   logoOption === 'ai_1' 
-                    ? 'border-blue-500 bg-blue-500/5 shadow-md' 
-                    : 'border-border-custom hover:border-text-secondary/50 bg-bg-primary'
+                    ? 'border-blue-500 bg-blue-500/5' 
+                    : 'border-border-custom hover:border-text-secondary/50 bg-card-bg'
                 }`}
               >
                 <div className="w-16 h-16 rounded-full bg-gradient-to-tr from-blue-600 to-indigo-500 flex items-center justify-center text-white text-2xl font-black shadow-sm">
@@ -376,10 +376,10 @@ export default function OnboardingPage() {
               {/* Option 2: Green Minimal circle */}
               <button
                 onClick={() => setLogoOption('ai_2')}
-                className={`aspect-square rounded-2xl border-2 flex flex-col items-center justify-center p-4 transition-all relative ${
+                className={`aspect-square rounded-2xl border flex flex-col items-center justify-center p-4 transition-all duration-300 relative hover:-translate-y-1 hover:shadow-[0_10px_40px_rgba(0,0,0,0.08)] shadow-[0_8px_30px_rgba(0,0,0,0.04)] ${
                   logoOption === 'ai_2' 
-                    ? 'border-green-500 bg-green-500/5 shadow-md' 
-                    : 'border-border-custom hover:border-text-secondary/50 bg-bg-primary'
+                    ? 'border-green-500 bg-green-500/5' 
+                    : 'border-border-custom hover:border-text-secondary/50 bg-card-bg'
                 }`}
               >
                 <div className="w-16 h-16 rounded-2xl bg-gradient-to-tr from-emerald-500 to-teal-500 flex items-center justify-center text-white text-2xl font-black shadow-sm">
@@ -392,10 +392,10 @@ export default function OnboardingPage() {
               {/* Option 3: Golden retro monogram */}
               <button
                 onClick={() => setLogoOption('ai_3')}
-                className={`aspect-square rounded-2xl border-2 flex flex-col items-center justify-center p-4 transition-all relative ${
+                className={`aspect-square rounded-2xl border flex flex-col items-center justify-center p-4 transition-all duration-300 relative hover:-translate-y-1 hover:shadow-[0_10px_40px_rgba(0,0,0,0.08)] shadow-[0_8px_30px_rgba(0,0,0,0.04)] ${
                   logoOption === 'ai_3' 
-                    ? 'border-yellow-500 bg-yellow-500/5 shadow-md' 
-                    : 'border-border-custom hover:border-text-secondary/50 bg-bg-primary'
+                    ? 'border-yellow-500 bg-yellow-500/5' 
+                    : 'border-border-custom hover:border-text-secondary/50 bg-card-bg'
                 }`}
               >
                 <div className="w-16 h-16 rounded-xl bg-gradient-to-tr from-amber-500 to-yellow-400 flex items-center justify-center text-white text-2xl font-black shadow-sm">
@@ -408,10 +408,10 @@ export default function OnboardingPage() {
               {/* Option 4: Cyberpunk Red monogram */}
               <button
                 onClick={() => setLogoOption('ai_4')}
-                className={`aspect-square rounded-2xl border-2 flex flex-col items-center justify-center p-4 transition-all relative ${
+                className={`aspect-square rounded-2xl border flex flex-col items-center justify-center p-4 transition-all duration-300 relative hover:-translate-y-1 hover:shadow-[0_10px_40px_rgba(0,0,0,0.08)] shadow-[0_8px_30px_rgba(0,0,0,0.04)] ${
                   logoOption === 'ai_4' 
-                    ? 'border-red-500 bg-red-500/5 shadow-md' 
-                    : 'border-border-custom hover:border-text-secondary/50 bg-bg-primary'
+                    ? 'border-red-500 bg-red-500/5' 
+                    : 'border-border-custom hover:border-text-secondary/50 bg-card-bg'
                 }`}
               >
                 <div className="w-16 h-16 rounded-3xl bg-gradient-to-tr from-rose-500 to-pink-500 flex items-center justify-center text-white text-2xl font-black shadow-sm">
@@ -481,7 +481,7 @@ export default function OnboardingPage() {
 
         {/* Step 3: ₹1 UPI TRIAL SUBSCRIPTION */}
         {step === 'trial_payment' && (
-          <div className="w-full max-w-md bg-card-bg border border-border-custom rounded-3xl p-8 shadow-xl animate-fade-in">
+          <div className="w-full max-w-md bg-card-bg border border-border-custom rounded-3xl p-8 shadow-[0_8px_30px_rgba(0,0,0,0.04)] animate-fade-in">
             <div className="flex flex-col items-center gap-2 mb-6 text-center">
               <span className="text-[10px] uppercase tracking-widest text-accent-custom font-extrabold">Step 3 of 3</span>
               <h1 className="text-2xl font-black text-text-primary font-heading">

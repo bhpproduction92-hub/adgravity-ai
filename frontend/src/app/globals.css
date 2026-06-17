@@ -7,6 +7,7 @@
   --color-border-custom: var(--border-custom);
   --color-accent-custom: var(--accent-custom);
   --color-card-bg: var(--card-bg);
+  --shadow-custom: var(--shadow-custom);
 }
 
 @layer utilities {
@@ -30,54 +31,54 @@
   --font-body: var(--font-inter), -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   --font-heading: var(--font-outfit), -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 
-  /* Google-Style Bright Theme (Default) */
-  --bg-primary: #f8f9fa;
-  --text-primary: #202124;
-  --text-secondary: #5f6368;
-  --border-custom: #dadce0;
-  --accent-custom: #1a73e8;
+  /* Google-Style Bright Theme (Default) - Polished */
+  --bg-primary: #f8fafc;
+  --text-primary: #0f172a;
+  --text-secondary: #64748b;
+  --border-custom: rgba(241, 245, 249, 0.8);
+  --accent-custom: #2563eb;
   --card-bg: #ffffff;
-  --shadow-custom: 0 1px 2px 0 rgba(60,64,67,0.3), 0 1px 3px 1px rgba(60,64,67,0.15);
+  --shadow-custom: 0 8px 30px rgba(0,0,0,0.04);
 }
 
 .theme-bright {
-  --bg-primary: #f8f9fa;
-  --text-primary: #202124;
-  --text-secondary: #5f6368;
-  --border-custom: #dadce0;
-  --accent-custom: #1a73e8;
+  --bg-primary: #f8fafc;
+  --text-primary: #0f172a;
+  --text-secondary: #64748b;
+  --border-custom: rgba(241, 245, 249, 0.8);
+  --accent-custom: #2563eb;
   --card-bg: #ffffff;
-  --shadow-custom: 0 1px 2px 0 rgba(60,64,67,0.3), 0 1px 3px 1px rgba(60,64,67,0.15);
+  --shadow-custom: 0 8px 30px rgba(0,0,0,0.04);
 }
 
 .theme-light {
-  --bg-primary: #ffffff;
+  --bg-primary: #f8fafc;
   --text-primary: #0f172a;
   --text-secondary: #64748b;
-  --border-custom: #e2e8f0;
+  --border-custom: rgba(241, 245, 249, 0.8);
   --accent-custom: #4f46e5;
-  --card-bg: #f8fafc;
-  --shadow-custom: 0 1px 3px 0 rgba(0,0,0,0.05), 0 1px 2px -1px rgba(0,0,0,0.05);
+  --card-bg: #ffffff;
+  --shadow-custom: 0 8px 30px rgba(0,0,0,0.04);
 }
 
 .theme-dark {
   --bg-primary: #090d16;
   --text-primary: #f8fafc;
   --text-secondary: #94a3b8;
-  --border-custom: #1e293b;
+  --border-custom: rgba(30, 41, 59, 0.5);
   --accent-custom: #38bdf8;
   --card-bg: #0f172a;
-  --shadow-custom: 0 10px 15px -3px rgba(0,0,0,0.3), 0 4px 6px -4px rgba(0,0,0,0.3);
+  --shadow-custom: 0 10px 30px rgba(0,0,0,0.3);
 }
 
 .theme-standard {
   --bg-primary: #07090e;
   --text-primary: #f3f4f6;
   --text-secondary: #9ca3af;
-  --border-custom: #1f2937;
+  --border-custom: rgba(31, 41, 55, 0.5);
   --accent-custom: #6366f1;
   --card-bg: #0c0f18;
-  --shadow-custom: 0 4px 6px -1px rgba(0,0,0,0.2);
+  --shadow-custom: 0 8px 30px rgba(0,0,0,0.3);
 }
 
 body {

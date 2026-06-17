@@ -339,7 +339,7 @@ export default function AdminDashboard() {
       <div className="min-h-screen bg-bg-primary text-text-primary flex items-center justify-center p-6 selection:bg-indigo-500 selection:text-white relative font-urbanist">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_10%,rgba(26,115,232,0.08),transparent_50%)] pointer-events-none" />
         
-        <div className="w-full max-w-md bg-card-bg border border-border-custom rounded-3xl p-8 shadow-xl relative backdrop-blur-md">
+        <div className="w-full max-w-md bg-card-bg border border-border-custom rounded-3xl p-8 shadow-[0_8px_30px_rgba(0,0,0,0.04)] relative backdrop-blur-md">
           <div className="flex flex-col items-center gap-2 mb-8 text-center">
             <div className="w-11 h-11 rounded-xl bg-accent-custom flex items-center justify-center text-white font-extrabold text-lg shadow-sm shadow-accent-custom/10">
               A
@@ -436,7 +436,7 @@ export default function AdminDashboard() {
   return (
     <div className="min-h-screen bg-bg-primary text-text-primary flex flex-col font-sans selection:bg-indigo-500 selection:text-white pb-12 transition-colors duration-300 font-urbanist">
       {/* Top Navbar */}
-      <header className="w-full bg-card-bg border-b border-border-custom sticky top-0 z-40 shadow-sm backdrop-blur-md">
+      <header className="w-full bg-card-bg border-b border-border-custom sticky top-0 z-40 shadow-[0_10px_35px_rgba(0,0,0,0.05)] backdrop-blur-md">
         <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
           <div className="flex items-center gap-2.5 cursor-pointer" onClick={() => router.push('/')}>
             <div className="w-8 h-8 rounded-xl bg-accent-custom flex items-center justify-center text-white font-extrabold text-sm shadow-sm">
@@ -580,7 +580,7 @@ export default function AdminDashboard() {
                 {/* Left 4 Cols: Revenue Analytics */}
                 <div className="lg:col-span-4 flex flex-col gap-6">
                   {/* Analytics */}
-                  <div className="rounded-3xl bg-card-bg border border-border-custom p-6 flex flex-col gap-4 shadow-sm">
+                  <div className="rounded-3xl bg-card-bg border border-border-custom p-6 flex flex-col gap-4 shadow-[0_8px_30px_rgba(0,0,0,0.04)]">
                     <h3 className="text-sm font-extrabold tracking-wide text-text-secondary uppercase">Platform Revenue Analytics</h3>
                     
                     <div className="flex flex-col gap-4 mt-2">
@@ -603,7 +603,7 @@ export default function AdminDashboard() {
                   </div>
 
                   {/* Pricing Rules Configuration */}
-                  <div className="rounded-3xl bg-card-bg border border-border-custom p-6 flex flex-col gap-6 shadow-sm">
+                  <div className="rounded-3xl bg-card-bg border border-border-custom p-6 flex flex-col gap-6 shadow-[0_8px_30px_rgba(0,0,0,0.04)]">
                     <div>
                       <h3 className="text-sm font-extrabold tracking-wide text-text-secondary uppercase">Pricing & Packages Rules</h3>
                       <p className="text-text-secondary text-[10px] mt-1 font-medium">Update package rates globally inside database.</p>
@@ -653,7 +653,7 @@ export default function AdminDashboard() {
                   </div>
 
                   {/* Company Profile Settings Panel */}
-                  <div className="rounded-3xl bg-card-bg border border-border-custom p-6 flex flex-col gap-6 shadow-sm">
+                  <div className="rounded-3xl bg-card-bg border border-border-custom p-6 flex flex-col gap-6 shadow-[0_8px_30px_rgba(0,0,0,0.04)]">
                     <div>
                       <h3 className="text-sm font-extrabold tracking-wide text-text-secondary uppercase">Company Settings Panel</h3>
                       <p className="text-text-secondary text-[10px] mt-1 font-medium">Configure company credentials globally.</p>
@@ -723,7 +723,7 @@ export default function AdminDashboard() {
 
                 {/* Right 8 Cols: Staff Manager Panel */}
                 <div className="lg:col-span-8 flex flex-col gap-6">
-                  <div className="rounded-3xl bg-card-bg border border-border-custom p-6 flex flex-col gap-6 shadow-sm">
+                  <div className="rounded-3xl bg-card-bg border border-border-custom p-6 flex flex-col gap-6 shadow-[0_8px_30px_rgba(0,0,0,0.04)]">
                     <div>
                       <h3 className="text-base font-bold text-text-primary">Staff Manager Panel</h3>
                       <p className="text-text-secondary text-xs mt-1 font-medium">Manage sub-admin staff credentials and authorization scopes.</p>
@@ -884,7 +884,7 @@ export default function AdminDashboard() {
                 {/* Left 4 Cols: Restricted metrics */}
                 <div className="lg:col-span-4 flex flex-col gap-6">
                   {/* Restricted Trial Metrics */}
-                  <div className="rounded-3xl bg-card-bg border border-border-custom p-6 flex flex-col gap-4 shadow-sm">
+                  <div className="rounded-3xl bg-card-bg border border-border-custom p-6 flex flex-col gap-4 shadow-[0_8px_30px_rgba(0,0,0,0.04)]">
                     <h3 className="text-sm font-extrabold tracking-wide text-text-secondary uppercase">Restricted Trial Metrics</h3>
                     
                     <div className="flex flex-col gap-3 mt-2 text-xs font-semibold">
@@ -915,7 +915,7 @@ export default function AdminDashboard() {
                 {/* Right 8 Cols: Preset editor & slider replacement */}
                 <div className="lg:col-span-8 flex flex-col gap-6">
                   {/* Regional Festival Presets */}
-                  <div className="rounded-3xl bg-card-bg border border-border-custom p-6 flex flex-col gap-6 shadow-sm">
+                  <div className="rounded-3xl bg-card-bg border border-border-custom p-6 flex flex-col gap-6 shadow-[0_8px_30px_rgba(0,0,0,0.04)]">
                     <div>
                       <h3 className="text-base font-bold text-text-primary">Regional Festival presets</h3>
                       <p className="text-text-secondary text-xs mt-1 font-medium">Configure and push regional holiday ad copy templates directly to the canvas templates.</p>
@@ -970,7 +970,7 @@ export default function AdminDashboard() {
                   </div>
 
                   {/* Hero GIF replacer */}
-                  <div className="rounded-3xl bg-card-bg border border-border-custom p-6 flex flex-col gap-6 shadow-sm">
+                  <div className="rounded-3xl bg-card-bg border border-border-custom p-6 flex flex-col gap-6 shadow-[0_8px_30px_rgba(0,0,0,0.04)]">
                     <div>
                       <h3 className="text-base font-bold text-text-primary">Landing Page Hero GIF Replacer</h3>
                       <p className="text-text-secondary text-xs mt-1 font-medium">Replace animation slides on the landing page hero slider mockup.</p>
@@ -1036,7 +1036,7 @@ export default function AdminDashboard() {
       {/* Edit captions modal popup */}
       {editingItem && (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-6 z-55 animate-fade-in">
-          <div className="w-full max-w-2xl bg-card-bg border border-border-custom rounded-3xl p-8 shadow-xl relative">
+          <div className="w-full max-w-2xl bg-card-bg border border-border-custom rounded-3xl p-8 shadow-[0_12px_40px_rgba(0,0,0,0.08)] relative">
             <h3 className="text-lg font-bold text-text-primary font-heading mb-2">
               Edit & Approve Campaign
             </h3>
@@ -1109,7 +1109,7 @@ export default function AdminDashboard() {
             {pendingQueue.map((item) => {
               const parsed = parseContent(item.ai_content);
               return (
-                <div key={item.id} className="rounded-3xl bg-card-bg border border-border-custom p-6 flex flex-col gap-5 shadow-sm relative overflow-hidden">
+                <div key={item.id} className="rounded-3xl bg-card-bg border border-border-custom p-6 flex flex-col gap-5 shadow-[0_8px_30px_rgba(0,0,0,0.04)] relative overflow-hidden">
                   <div className="flex justify-between items-start flex-wrap gap-4 border-b border-border-custom pb-4">
                     <div>
                       <strong className="text-sm font-bold text-text-primary block">
@@ -1161,7 +1161,7 @@ export default function AdminDashboard() {
         )}
 
         {/* System Logs console */}
-        <div className="rounded-3xl bg-card-bg border border-border-custom p-6 flex flex-col gap-6 shadow-sm">
+        <div className="rounded-3xl bg-card-bg border border-border-custom p-6 flex flex-col gap-6 shadow-[0_8px_30px_rgba(0,0,0,0.04)]">
           <div>
             <h4 className="text-base font-bold text-text-primary">System Events Log Stream</h4>
             <p className="text-text-secondary text-xs mt-1 font-medium">Real-time feed of events, payment gateways, and content authorization alerts.</p>

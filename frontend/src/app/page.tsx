@@ -166,7 +166,7 @@ export default function LandingPage() {
       />
 
       {/* Top Navbar */}
-      <header className="w-full bg-card-bg border-b border-border-custom sticky top-0 z-40 shadow-sm backdrop-blur-md">
+      <header className="w-full bg-card-bg border-b border-border-custom sticky top-0 z-40 shadow-[0_10px_35px_rgba(0,0,0,0.05)] backdrop-blur-md">
         <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
           
           {/* Logo Branding */}
@@ -227,7 +227,7 @@ export default function LandingPage() {
           </p>
 
           {/* Public Prompt Box */}
-          <div className="glass-panel rounded-3xl p-5 border border-border-custom shadow-lg flex flex-col gap-4 mt-2 max-w-md mx-auto lg:mx-0 w-full bg-card-bg">
+          <div className="glass-panel rounded-3xl p-5 border border-border-custom shadow-[0_8px_30px_rgba(0,0,0,0.04)] flex flex-col gap-4 mt-2 max-w-md mx-auto lg:mx-0 w-full bg-card-bg">
             <div className="flex flex-col gap-1 text-left">
               <span className="text-[10px] font-bold text-text-secondary uppercase tracking-widest">Step 1: Describe Business Niches</span>
               <p className="text-xs text-text-primary font-bold">Describe your products or services to render initial drafts:</p>
@@ -292,7 +292,7 @@ export default function LandingPage() {
           </div>
 
           {/* Device Mockup Canvas */}
-          <div className="w-full aspect-[4/3] rounded-3xl bg-card-bg border border-border-custom p-6 flex flex-col justify-between shadow-xl relative overflow-hidden group">
+          <div className="w-full aspect-[4/3] rounded-3xl bg-card-bg border border-border-custom p-6 flex flex-col justify-between shadow-[0_8px_30px_rgba(0,0,0,0.04)] relative overflow-hidden group">
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_75%_25%,rgba(26,115,232,0.06),transparent)] pointer-events-none" />
 
             {/* Window header */}
@@ -475,7 +475,7 @@ export default function LandingPage() {
         <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           
           {/* Plan 1: Basic */}
-          <div className="rounded-3xl bg-card-bg border border-border-custom hover:border-accent-custom/30 p-6 flex flex-col justify-between transition-all hover:-translate-y-1 hover:shadow-lg">
+          <div className="rounded-3xl bg-card-bg border border-border-custom p-6 flex flex-col justify-between transition-all duration-300 hover:-translate-y-1 shadow-[0_8px_30px_rgba(0,0,0,0.04)] hover:shadow-[0_10px_40px_rgba(0,0,0,0.08)]">
             <div className="flex flex-col gap-4 text-xs">
               <span className="text-xs uppercase tracking-wider text-blue-500 font-bold">Basic Tier</span>
               <div className="flex items-baseline gap-1">
@@ -504,7 +504,7 @@ export default function LandingPage() {
           </div>
 
           {/* Plan 2: Standard */}
-          <div className="rounded-3xl bg-card-bg border-2 border-accent-custom/50 p-6 flex flex-col justify-between transition-all hover:-translate-y-1 relative shadow-md shadow-accent-custom/5">
+          <div className="rounded-3xl bg-card-bg border-2 border-accent-custom/40 p-6 flex flex-col justify-between transition-all duration-300 hover:-translate-y-1 relative shadow-[0_8px_30px_rgba(0,0,0,0.04)] hover:shadow-[0_10px_40px_rgba(0,0,0,0.08)]">
             <span className="absolute -top-3.5 left-1/2 -translate-x-1/2 px-3.5 py-1 rounded-full bg-accent-custom text-[9px] font-black tracking-widest text-white uppercase shadow">
               Most Popular
             </span>
@@ -536,7 +536,7 @@ export default function LandingPage() {
           </div>
 
           {/* Plan 3: Premium */}
-          <div className="rounded-3xl bg-card-bg border border-border-custom hover:border-accent-custom/30 p-6 flex flex-col justify-between transition-all hover:-translate-y-1 hover:shadow-lg">
+          <div className="rounded-3xl bg-card-bg border border-border-custom p-6 flex flex-col justify-between transition-all duration-300 hover:-translate-y-1 shadow-[0_8px_30px_rgba(0,0,0,0.04)] hover:shadow-[0_10px_40px_rgba(0,0,0,0.08)]">
             <div className="flex flex-col gap-4 text-xs">
               <span className="text-xs uppercase tracking-wider text-red-500 font-bold">Premium Tier</span>
               <div className="flex items-baseline gap-1">
@@ -565,7 +565,7 @@ export default function LandingPage() {
           </div>
 
           {/* Boosting Card */}
-          <div className="rounded-3xl bg-yellow-500/5 border border-yellow-500/20 hover:border-yellow-500/50 p-6 flex flex-col justify-between transition-all hover:-translate-y-1 hover:shadow-lg relative overflow-hidden">
+          <div className="rounded-3xl bg-yellow-500/[0.03] border border-yellow-500/20 p-6 flex flex-col justify-between transition-all duration-300 hover:-translate-y-1 shadow-[0_8px_30px_rgba(0,0,0,0.04)] hover:shadow-[0_10px_40px_rgba(0,0,0,0.08)] relative overflow-hidden">
             <div className="absolute top-0 right-0 w-16 h-16 bg-yellow-500/5 rounded-full blur-xl" />
             <div className="flex flex-col gap-4 text-xs">
               <span className="text-xs uppercase tracking-wider text-yellow-600 font-bold">Boosting Ads Package</span>
@@ -641,7 +641,7 @@ export default function LandingPage() {
       </footer>
 
       {/* Floating Mobile Bottom Nav */}
-      <div className="fixed bottom-0 left-0 right-0 bg-card-bg border-t border-border-custom py-3 px-6 flex justify-around items-center z-45 md:hidden shadow-lg">
+      <div className="fixed bottom-0 left-0 right-0 bg-card-bg border-t border-border-custom py-3 px-6 flex justify-around items-center z-45 md:hidden shadow-[0_-10px_35px_rgba(0,0,0,0.06)]">
         <Link href="/" className="flex flex-col items-center gap-1 text-[10px] font-bold text-accent-custom">
           <span>🏠</span>
           <span>Home</span>
