@@ -88,7 +88,9 @@ export default function PrivacyPolicyPage() {
               <span className="text-white font-sans font-bold">BHP Production Compliance Officer</span>
               <span>Officer: Hridaya Nanda Sarma</span>
               <span>Email: support@bhpproduction.com</span>
-              <span>Website: ai.bhpproduction.com</span>
+              <span>Website: https://bhpproduction.com/</span>
+              <span>Support Contact: +91 9577781416</span>
+              <span>Headquarters Address: Kahilipara, Guwahati, Assam, India</span>
             </div>
           </section>
         </div>

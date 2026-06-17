@@ -19,6 +19,13 @@ function SettingsContent() {
   // Active settings tab
   const [activeTab, setActiveTab] = useState<'social' | 'billing' | 'theme' | 'help'>('social');
 
+  // Company Profile State
+  const [companyProfile, setCompanyProfile] = useState<any>({
+    websiteUrl: 'https://bhpproduction.com/',
+    supportPhone: '+91 9577781416',
+    address: 'Kahilipara, Guwahati, Assam, India'
+  });
+
   // Step-locking: Load profile, redirect to onboarding if missing
   useEffect(() => {
     const savedProfile = localStorage.getItem('adgravity_profile');
@@ -31,6 +38,12 @@ function SettingsContent() {
       const savedColor = localStorage.getItem('adgravity_theme_color');
       if (savedColor) {
         setThemeColor(savedColor);
+      }
+
+      // Load company profile from localStorage if it exists
+      const savedCompany = localStorage.getItem('adgravity_company_profile');
+      if (savedCompany) {
+        setCompanyProfile(JSON.parse(savedCompany));
       }
     }
   }, [router]);
@@ -305,12 +318,12 @@ function SettingsContent() {
                   <div className="flex flex-col gap-3">
                     <span className="text-xs font-semibold text-gray-400">Official Support Chat</span>
                     <a
-                      href="https://wa.me/911234567890?text=I%2520need%252520support%252520with%252520AdGravity%252520AI"
+                      href={`https://wa.me/${companyProfile.supportPhone.replace(/[^0-9]/g, '')}?text=I%2520need%2520support%2520with%2520AdGravity%2520AI`}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="py-3 px-4 rounded-xl bg-[#25d366]/10 hover:bg-[#25d366]/20 border border-[#25d366]/20 text-[#25d366] font-semibold text-xs flex items-center justify-center gap-2 transition-all"
                     >
-                      💬 Chat on WhatsApp Business
+                      💬 Chat on WhatsApp (+91 {companyProfile.supportPhone.slice(-10)})
                     </a>
                   </div>
                   

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 
 export default function ControlCenterPage() {
@@ -22,6 +22,34 @@ export default function ControlCenterPage() {
   const [standardPrice, setStandardPrice] = useState(999);
   const [premiumPrice, setPremiumPrice] = useState(1999);
   const [pricingSuccess, setPricingSuccess] = useState(false);
+
+  // Super Admin: Company settings states
+  const [websiteUrl, setWebsiteUrl] = useState('https://bhpproduction.com/');
+  const [supportPhone, setSupportPhone] = useState('+91 9577781416');
+  const [address, setAddress] = useState('Kahilipara, Guwahati, Assam, India');
+  const [companySuccess, setCompanySuccess] = useState(false);
+
+  useEffect(() => {
+    const savedCompany = localStorage.getItem('adgravity_company_profile');
+    if (savedCompany) {
+      const parsed = JSON.parse(savedCompany);
+      setWebsiteUrl(parsed.websiteUrl || 'https://bhpproduction.com/');
+      setSupportPhone(parsed.supportPhone || '+91 9577781416');
+      setAddress(parsed.address || 'Kahilipara, Guwahati, Assam, India');
+    }
+  }, []);
+
+  const handleSaveCompany = (e: React.FormEvent) => {
+    e.preventDefault();
+    const data = {
+      websiteUrl,
+      supportPhone,
+      address
+    };
+    localStorage.setItem('adgravity_company_profile', JSON.stringify(data));
+    setCompanySuccess(true);
+    setTimeout(() => setCompanySuccess(false), 2000);
+  };
 
   // Sub-Admin: Festival Presets State
   const [festivalPresetName, setFestivalPresetName] = useState('Rongali Bihu Greetings');
@@ -215,6 +243,56 @@ export default function ControlCenterPage() {
                 {pricingSuccess && (
                   <div className="p-3 bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs rounded-xl text-center">
                     ✓ Pricing parameters updated successfully!
+                  </div>
+                )}
+              </div>
+
+              {/* Company Profile Settings Panel */}
+              <div className="rounded-3xl bg-white/5 border border-white/10 p-6 flex flex-col gap-6 shadow-xl">
+                <div>
+                  <h3 className="text-sm font-semibold tracking-wide text-gray-400 uppercase">Company Settings Panel</h3>
+                  <p className="text-gray-500 text-[10px] mt-1">Configure company credentials globally.</p>
+                </div>
+
+                <form onSubmit={handleSaveCompany} className="flex flex-col gap-4">
+                  <div className="flex flex-col gap-1.5">
+                    <label className="text-xs font-semibold text-gray-400">Website URL</label>
+                    <input 
+                      type="url" 
+                      value={websiteUrl}
+                      onChange={(e) => setWebsiteUrl(e.target.value)}
+                      className="px-4 py-2 bg-[#07090e] border border-white/10 rounded-xl focus:border-indigo-500 focus:outline-none text-white text-xs font-mono"
+                    />
+                  </div>
+                  <div className="flex flex-col gap-1.5">
+                    <label className="text-xs font-semibold text-gray-400">Support Contact Phone</label>
+                    <input 
+                      type="text" 
+                      value={supportPhone}
+                      onChange={(e) => setSupportPhone(e.target.value)}
+                      className="px-4 py-2 bg-[#07090e] border border-white/10 rounded-xl focus:border-indigo-500 focus:outline-none text-white text-xs font-mono"
+                    />
+                  </div>
+                  <div className="flex flex-col gap-1.5">
+                    <label className="text-xs font-semibold text-gray-400">Physical Address</label>
+                    <input 
+                      type="text" 
+                      value={address}
+                      onChange={(e) => setAddress(e.target.value)}
+                      className="px-4 py-2 bg-[#07090e] border border-white/10 rounded-xl focus:border-indigo-500 focus:outline-none text-white text-xs"
+                    />
+                  </div>
+
+                  <button 
+                    type="submit"
+                    className="w-full py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-semibold text-xs transition-all active:scale-[0.98]"
+                  >
+                    Save Company Profile
+                  </button>
+                </form>
+                {companySuccess && (
+                  <div className="p-3 bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs rounded-xl text-center">
+                    ✓ Company profile updated globally!
                   </div>
                 )}
               </div>

@@ -72,10 +72,10 @@ export default function AboutPage() {
               <h2 className="text-xl font-bold text-white mt-0.5">Hridaya Nanda Sarma</h2>
             </div>
             <p className="text-gray-350 text-xs leading-relaxed">
-              As a media entrepreneur and tech innovator, Hridaya Nanda Sarma founded **BHP Production** and launched **AdGravity.AI** to solve localized publicity hurdles. By leveraging modern AI and automated workflows, the platform bridges the gap between regional business owners and advanced social advertising platforms.
+              As a media entrepreneur and tech innovator, Hridaya Nanda Sarma founded <a href="https://bhpproduction.com/" target="_blank" rel="noopener noreferrer" className="text-indigo-400 hover:underline font-bold">BHP Production</a> (headquartered in Kahilipara, Guwahati, Assam, India) and launched **AdGravity.AI** to solve localized publicity hurdles. By leveraging modern AI and automated workflows, the platform bridges the gap between regional business owners and advanced social advertising platforms.
             </p>
-            <div className="flex gap-4 justify-center md:justify-start text-[10px] text-gray-500 font-mono mt-1">
-              <span>Parent Org: BHP Production</span>
+            <div className="flex flex-wrap gap-4 justify-center md:justify-start text-[10px] text-gray-500 font-mono mt-1">
+              <span>Parent Org: <a href="https://bhpproduction.com/" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">BHP Production</a></span>
               <span>•</span>
               <span>Platform: AdGravity.AI</span>
             </div>

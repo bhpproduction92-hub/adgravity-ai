@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 export default function ContactForm() {
   const [name, setName] = useState('');
@@ -10,6 +10,19 @@ export default function ContactForm() {
   const [message, setMessage] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+
+  const [companyProfile, setCompanyProfile] = useState<any>({
+    websiteUrl: 'https://bhpproduction.com/',
+    supportPhone: '+91 9577781416',
+    address: 'Kahilipara, Guwahati, Assam, India'
+  });
+
+  useEffect(() => {
+    const saved = localStorage.getItem('adgravity_company_profile');
+    if (saved) {
+      setCompanyProfile(JSON.parse(saved));
+    }
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -46,8 +59,10 @@ export default function ContactForm() {
               <span className="text-xl">🏢</span>
               <div className="flex flex-col gap-0.5">
                 <span className="font-semibold text-white">BHP Production Office</span>
-                <a href="mailto:support@bhpproduction.com" className="text-indigo-400 hover:underline">support@bhpproduction.com</a>
-                <span className="text-gray-550 text-[10px] mt-0.5">Guwahati, Assam, India</span>
+                <a href={companyProfile.websiteUrl} target="_blank" rel="noopener noreferrer" className="text-indigo-400 hover:underline">
+                  {companyProfile.websiteUrl.replace('https://', '').replace('/', '')}
+                </a>
+                <span className="text-gray-550 text-[10px] mt-0.5">{companyProfile.address}</span>
               </div>
             </div>
 
@@ -68,7 +83,7 @@ export default function ContactForm() {
             Skip the queue and chat natively with our executive support desk on WhatsApp.
           </p>
           <a
-            href="https://wa.me/911234567890?text=I%2520need%2520support%2520with%2520my%2520AdGravity%2520AI%2520Workspace"
+            href={`https://wa.me/${companyProfile.supportPhone.replace(/[^0-9]/g, '')}?text=I%2520need%2520support%2520with%2520my%2520AdGravity%2520AI%2520Workspace`}
             target="_blank"
             rel="noopener noreferrer"
             className="py-3 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs flex items-center justify-center gap-2 transition-all active:scale-[0.98] shadow-lg shadow-emerald-500/10"
