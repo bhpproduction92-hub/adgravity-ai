@@ -24,6 +24,16 @@ const CategoryController = dynamic(() => import('./CategoryController'), {
   ssr: false,
 });
 
+const AiIntelligence = dynamic(() => import('./AiIntelligence'), {
+  loading: () => (
+    <div className="flex flex-col items-center justify-center p-12 border border-white/5 bg-white/[0.01] rounded-3xl gap-3 w-full">
+      <span className="w-6 h-6 border-2 border-indigo-500 border-t-transparent rounded-full animate-spin" />
+      <span className="text-xs text-gray-500">Loading AI Intelligence Co-Pilot...</span>
+    </div>
+  ),
+  ssr: false,
+});
+
 export default function ControlCenterPage() {
   const router = useRouter();
   
@@ -51,7 +61,7 @@ export default function ControlCenterPage() {
   const [companySuccess, setCompanySuccess] = useState(false);
 
   // Super Admin: Sub-Tab Selection
-  const [superAdminTab, setSuperAdminTab] = useState<'operations' | 'maintenance' | 'category'>('operations');
+  const [superAdminTab, setSuperAdminTab] = useState<'operations' | 'maintenance' | 'category' | 'ai_intelligence'>('operations');
 
   // Sub-Admin: Sub-Tab Selection
   const [subAdminTab, setSubAdminTab] = useState<'operations' | 'category'>('operations');
@@ -64,6 +74,35 @@ export default function ControlCenterPage() {
       setSupportPhone(parsed.supportPhone || '+91 9577781416');
       setAddress(parsed.address || 'Kahilipara, Guwahati, Assam, India');
     }
+
+    // Load pricing rules from localStorage
+    const savedPricing = localStorage.getItem('adgravity_pricing_rules');
+    if (savedPricing) {
+      const parsed = JSON.parse(savedPricing);
+      if (parsed.basic) setBasicPrice(parsed.basic);
+      if (parsed.premium) setPremiumPrice(parsed.premium);
+    }
+
+    // Custom events listeners for AI transitions
+    const handlePricingUpdate = (e: Event) => {
+      const customEvent = e as CustomEvent;
+      if (customEvent.detail.basic) setBasicPrice(customEvent.detail.basic);
+      if (customEvent.detail.premium) setPremiumPrice(customEvent.detail.premium);
+    };
+
+    const handleRevokeStaff = (e: Event) => {
+      const customEvent = e as CustomEvent;
+      const emailToRevoke = customEvent.detail;
+      setStaffList((prev) => prev.filter((staff) => staff.email !== emailToRevoke));
+    };
+
+    window.addEventListener('adgravity_pricing_updated', handlePricingUpdate);
+    window.addEventListener('adgravity_revoke_staff', handleRevokeStaff);
+
+    return () => {
+      window.removeEventListener('adgravity_pricing_updated', handlePricingUpdate);
+      window.removeEventListener('adgravity_revoke_staff', handleRevokeStaff);
+    };
   }, []);
 
   const handleSaveCompany = (e: React.FormEvent) => {
@@ -114,6 +153,12 @@ export default function ControlCenterPage() {
   // Save pricing changes handler
   const handleSavePricing = (e: React.FormEvent) => {
     e.preventDefault();
+    const pricingData = {
+      basic: basicPrice,
+      premium: premiumPrice,
+      updatedAt: new Date().toISOString()
+    };
+    localStorage.setItem('adgravity_pricing_rules', JSON.stringify(pricingData));
     setPricingSuccess(true);
     setTimeout(() => setPricingSuccess(false), 2000);
   };
@@ -221,6 +266,17 @@ export default function ControlCenterPage() {
                 🏷️ Category Manager
                 {superAdminTab === 'category' && (
                   <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-indigo-500 rounded-full" />
+                )}
+              </button>
+              <button
+                onClick={() => setSuperAdminTab('ai_intelligence')}
+                className={`pb-3 font-semibold transition-all relative flex items-center gap-1.5 ${
+                  superAdminTab === 'ai_intelligence' ? 'text-emerald-400 font-bold' : 'text-gray-400 hover:text-white'
+                }`}
+              >
+                🤖 AI Intelligence
+                {superAdminTab === 'ai_intelligence' && (
+                  <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-emerald-500 rounded-full shadow-[0_0_8px_rgba(16,185,129,0.5)]" />
                 )}
               </button>
               <button
@@ -454,6 +510,11 @@ export default function ControlCenterPage() {
             {/* Tab 3: Category Manager */}
             {superAdminTab === 'category' && (
               <CategoryController />
+            )}
+
+            {/* Tab 4: AI Intelligence Co-Pilot */}
+            {superAdminTab === 'ai_intelligence' && (
+              <AiIntelligence />
             )}
           </div>
         )}
