@@ -14,6 +14,16 @@ const MaintenanceWorkspace = dynamic(() => import('./MaintenanceWorkspace'), {
   ssr: false,
 });
 
+const CategoryController = dynamic(() => import('./CategoryController'), {
+  loading: () => (
+    <div className="flex flex-col items-center justify-center p-12 border border-white/5 bg-white/[0.01] rounded-3xl gap-3 w-full">
+      <span className="w-6 h-6 border-2 border-indigo-500 border-t-transparent rounded-full animate-spin" />
+      <span className="text-xs text-gray-500">Loading Category & Niche Controller...</span>
+    </div>
+  ),
+  ssr: false,
+});
+
 export default function ControlCenterPage() {
   const router = useRouter();
   
@@ -41,7 +51,10 @@ export default function ControlCenterPage() {
   const [companySuccess, setCompanySuccess] = useState(false);
 
   // Super Admin: Sub-Tab Selection
-  const [superAdminTab, setSuperAdminTab] = useState<'operations' | 'maintenance'>('operations');
+  const [superAdminTab, setSuperAdminTab] = useState<'operations' | 'maintenance' | 'category'>('operations');
+
+  // Sub-Admin: Sub-Tab Selection
+  const [subAdminTab, setSubAdminTab] = useState<'operations' | 'category'>('operations');
 
   useEffect(() => {
     const savedCompany = localStorage.getItem('adgravity_company_profile');
@@ -196,6 +209,17 @@ export default function ControlCenterPage() {
               >
                 📊 Platform Operations
                 {superAdminTab === 'operations' && (
+                  <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-indigo-500 rounded-full" />
+                )}
+              </button>
+              <button
+                onClick={() => setSuperAdminTab('category')}
+                className={`pb-3 font-semibold transition-all relative flex items-center gap-1.5 ${
+                  superAdminTab === 'category' ? 'text-white font-bold' : 'text-gray-400 hover:text-white'
+                }`}
+              >
+                🏷️ Category Manager
+                {superAdminTab === 'category' && (
                   <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-indigo-500 rounded-full" />
                 )}
               </button>
@@ -426,148 +450,187 @@ export default function ControlCenterPage() {
             {superAdminTab === 'maintenance' && (
               <MaintenanceWorkspace />
             )}
+
+            {/* Tab 3: Category Manager */}
+            {superAdminTab === 'category' && (
+              <CategoryController />
+            )}
           </div>
         )}
 
         {/* 2. SUB-ADMIN MODE (STAFF VIEW) */}
         {userRole === 'sub_admin' && (
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-            {/* Left 4 Cols: Restricted metrics */}
-            <div className="lg:col-span-4 flex flex-col gap-6">
-              {/* Restricted Trial Metrics */}
-              <div className="rounded-3xl bg-white/5 border border-white/10 p-6 flex flex-col gap-4 shadow-xl">
-                <h3 className="text-sm font-semibold tracking-wide text-gray-400 uppercase">Restricted Trial Metrics</h3>
-                
-                <div className="flex flex-col gap-3 mt-2 text-xs">
-                  <div className="flex justify-between items-center p-3 rounded-xl bg-white/[0.01] border border-white/5">
-                    <span>Total 7-Day Trials:</span>
-                    <strong className="text-white font-mono text-sm">142</strong>
-                  </div>
-                  <div className="flex justify-between items-center p-3 rounded-xl bg-white/[0.01] border border-white/5">
-                    <span>Active Users:</span>
-                    <strong className="text-white font-mono text-sm">89</strong>
-                  </div>
-                  <div className="flex justify-between items-center p-3 rounded-xl bg-white/[0.01] border border-white/5">
-                    <span>Trial Conversion Rate:</span>
-                    <strong className="text-indigo-400 font-mono text-sm">62%</strong>
-                  </div>
-                </div>
-              </div>
-              
-              {/* Info banner confirming hidden parameter */}
-              <div className="p-4 bg-amber-500/10 border border-amber-500/20 text-amber-300 text-xs rounded-2xl leading-relaxed flex gap-2">
-                <span className="text-base">🔒</span>
-                <div>
-                  <strong>Financial Lock:</strong> Revenue statistics, invoice generation parameters, and subscription billing controls are disabled under your sub-admin login.
-                </div>
-              </div>
+          <div className="flex flex-col gap-8">
+            {/* Sub-Admin Sub-Tabs */}
+            <div className="flex border-b border-white/5 pb-1 gap-6 text-xs sm:text-sm">
+              <button
+                onClick={() => setSubAdminTab('operations')}
+                className={`pb-3 font-semibold transition-all relative flex items-center gap-1.5 ${
+                  subAdminTab === 'operations' ? 'text-white font-bold' : 'text-gray-400 hover:text-white'
+                }`}
+              >
+                📋 Staff Operations
+                {subAdminTab === 'operations' && (
+                  <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-indigo-500 rounded-full" />
+                )}
+              </button>
+              <button
+                onClick={() => setSubAdminTab('category')}
+                className={`pb-3 font-semibold transition-all relative flex items-center gap-1.5 ${
+                  subAdminTab === 'category' ? 'text-white font-bold' : 'text-gray-400 hover:text-white'
+                }`}
+              >
+                🏷️ Category Manager
+                {subAdminTab === 'category' && (
+                  <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-indigo-500 rounded-full" />
+                )}
+              </button>
             </div>
 
-            {/* Right 8 Cols: Preset editor & slider replacement */}
-            <div className="lg:col-span-8 flex flex-col gap-6">
-              {/* Regional Festival Presets */}
-              <div className="rounded-3xl bg-white/5 border border-white/10 p-6 flex flex-col gap-6 shadow-xl">
-                <div>
-                  <h3 className="text-base font-bold text-white">Regional Festival presets</h3>
-                  <p className="text-gray-450 text-xs mt-1">Configure and push regional holiday ad copy templates directly to the canvas templates.</p>
-                </div>
-
-                <form onSubmit={handlePushPreset} className="flex flex-col gap-4">
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div className="flex flex-col gap-1.5">
-                      <label className="text-xs font-semibold text-gray-400">Preset Title</label>
-                      <input 
-                        type="text" 
-                        required
-                        value={festivalPresetName}
-                        onChange={(e) => setFestivalPresetName(e.target.value)}
-                        className="px-4 py-2.5 bg-white/5 border border-white/10 rounded-xl focus:border-indigo-500 focus:outline-none text-white text-xs"
-                      />
-                    </div>
-                    <div className="flex flex-col gap-1.5">
-                      <label className="text-xs font-semibold text-gray-400">Target Category</label>
-                      <select className="px-4 py-2.5 bg-[#0c0f18] border border-white/10 rounded-xl focus:border-indigo-500 focus:outline-none text-white text-xs">
-                        <option value="Cafe">Cafe / Restaurant</option>
-                        <option value="Pharmacy">Pharmacy / Healthcare</option>
-                        <option value="SaaS">SaaS Platform</option>
-                        <option value="Retail">Retail Store / Shop</option>
-                      </select>
+            {subAdminTab === 'operations' && (
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+                {/* Left 4 Cols: Restricted metrics */}
+                <div className="lg:col-span-4 flex flex-col gap-6">
+                  {/* Restricted Trial Metrics */}
+                  <div className="rounded-3xl bg-white/5 border border-white/10 p-6 flex flex-col gap-4 shadow-xl">
+                    <h3 className="text-sm font-semibold tracking-wide text-gray-400 uppercase">Restricted Trial Metrics</h3>
+                    
+                    <div className="flex flex-col gap-3 mt-2 text-xs">
+                      <div className="flex justify-between items-center p-3 rounded-xl bg-white/[0.01] border border-white/5">
+                        <span>Total 7-Day Trials:</span>
+                        <strong className="text-white font-mono text-sm">142</strong>
+                      </div>
+                      <div className="flex justify-between items-center p-3 rounded-xl bg-white/[0.01] border border-white/5">
+                        <span>Active Users:</span>
+                        <strong className="text-white font-mono text-sm">89</strong>
+                      </div>
+                      <div className="flex justify-between items-center p-3 rounded-xl bg-white/[0.01] border border-white/5">
+                        <span>Trial Conversion Rate:</span>
+                        <strong className="text-indigo-400 font-mono text-sm">62%</strong>
+                      </div>
                     </div>
                   </div>
-
-                  <div className="flex flex-col gap-1.5">
-                    <label className="text-xs font-semibold text-gray-400">Preset Slogan</label>
-                    <textarea 
-                      required
-                      rows={2}
-                      value={festivalSlogan}
-                      onChange={(e) => setFestivalSlogan(e.target.value)}
-                      className="px-4 py-2.5 bg-white/5 border border-white/10 rounded-xl focus:border-indigo-500 focus:outline-none text-white text-xs resize-none"
-                    />
+                  
+                  {/* Info banner confirming hidden parameter */}
+                  <div className="p-4 bg-amber-500/10 border border-amber-500/20 text-amber-300 text-xs rounded-2xl leading-relaxed flex gap-2">
+                    <span className="text-base">🔒</span>
+                    <div>
+                      <strong>Financial Lock:</strong> Revenue statistics, invoice generation parameters, and subscription billing controls are disabled under your sub-admin login.
+                    </div>
                   </div>
-
-                  <button 
-                    type="submit"
-                    className="w-full py-3 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-semibold text-xs transition-all active:scale-[0.98]"
-                  >
-                    Publish Preset to Regional Clients
-                  </button>
-                </form>
-                {presetSuccess && (
-                  <div className="p-3 bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs rounded-xl text-center">
-                    ✓ Festival preset published to database queues successfully!
-                  </div>
-                )}
-              </div>
-
-              {/* Hero GIF replacer */}
-              <div className="rounded-3xl bg-white/5 border border-white/10 p-6 flex flex-col gap-6 shadow-xl">
-                <div>
-                  <h3 className="text-base font-bold text-white">Landing Page Hero GIF Replacer</h3>
-                  <p className="text-gray-450 text-xs mt-1">Replace animation slides on the landing page hero slider mockup.</p>
                 </div>
 
-                <form onSubmit={handleReplaceSlider} className="flex flex-col gap-4">
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div className="flex flex-col gap-1.5">
-                      <label className="text-xs font-semibold text-gray-400">Select Mockup Slide</label>
-                      <select 
-                        value={sliderIndex}
-                        onChange={(e) => setSliderIndex(e.target.value)}
-                        className="px-4 py-2.5 bg-[#0c0f18] border border-white/10 rounded-xl focus:border-indigo-500 focus:outline-none text-white text-xs"
+                {/* Right 8 Cols: Preset editor & slider replacement */}
+                <div className="lg:col-span-8 flex flex-col gap-6">
+                  {/* Regional Festival Presets */}
+                  <div className="rounded-3xl bg-white/5 border border-white/10 p-6 flex flex-col gap-6 shadow-xl">
+                    <div>
+                      <h3 className="text-base font-bold text-white">Regional Festival presets</h3>
+                      <p className="text-gray-450 text-xs mt-1">Configure and push regional holiday ad copy templates directly to the canvas templates.</p>
+                    </div>
+
+                    <form onSubmit={handlePushPreset} className="flex flex-col gap-4">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div className="flex flex-col gap-1.5">
+                          <label className="text-xs font-semibold text-gray-400">Preset Title</label>
+                          <input 
+                            type="text" 
+                            required
+                            value={festivalPresetName}
+                            onChange={(e) => setFestivalPresetName(e.target.value)}
+                            className="px-4 py-2.5 bg-white/5 border border-white/10 rounded-xl focus:border-indigo-500 focus:outline-none text-white text-xs"
+                          />
+                        </div>
+                        <div className="flex flex-col gap-1.5">
+                          <label className="text-xs font-semibold text-gray-400">Target Category</label>
+                          <select className="px-4 py-2.5 bg-[#0c0f18] border border-white/10 rounded-xl focus:border-indigo-500 focus:outline-none text-white text-xs">
+                            <option value="Cafe">Cafe / Restaurant</option>
+                            <option value="Pharmacy">Pharmacy / Healthcare</option>
+                            <option value="SaaS">SaaS Platform</option>
+                            <option value="Retail">Retail Store / Shop</option>
+                          </select>
+                        </div>
+                      </div>
+
+                      <div className="flex flex-col gap-1.5">
+                        <label className="text-xs font-semibold text-gray-400">Preset Slogan</label>
+                        <textarea 
+                          required
+                          rows={2}
+                          value={festivalSlogan}
+                          onChange={(e) => setFestivalSlogan(e.target.value)}
+                          className="px-4 py-2.5 bg-white/5 border border-white/10 rounded-xl focus:border-indigo-500 focus:outline-none text-white text-xs resize-none"
+                        />
+                      </div>
+
+                      <button 
+                        type="submit"
+                        className="w-full py-3 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-semibold text-xs transition-all active:scale-[0.98]"
                       >
-                        <option value="1">Slide 1 (Reels rendering mockup)</option>
-                        <option value="2">Slide 2 (Theme switcher mockup)</option>
-                        <option value="3">Slide 3 (Layout resizer mockup)</option>
-                      </select>
-                    </div>
-                    <div className="flex flex-col gap-1.5">
-                      <label className="text-xs font-semibold text-gray-400">New Animation GIF / Media URL</label>
-                      <input 
-                        type="url" 
-                        required
-                        placeholder="https://assets.adgravity.ai/animations/new-slide.gif"
-                        value={sliderAssetUrl}
-                        onChange={(e) => setSliderAssetUrl(e.target.value)}
-                        className="px-4 py-2.5 bg-white/5 border border-white/10 rounded-xl focus:border-indigo-500 focus:outline-none text-white text-xs font-mono"
-                      />
-                    </div>
+                        Publish Preset to Regional Clients
+                      </button>
+                    </form>
+                    {presetSuccess && (
+                      <div className="p-3 bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs rounded-xl text-center">
+                        ✓ Festival preset published to database queues successfully!
+                      </div>
+                    )}
                   </div>
 
-                  <button 
-                    type="submit"
-                    className="w-full py-3 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-semibold text-xs transition-all active:scale-[0.98]"
-                  >
-                    Deploy New Hero Asset
-                  </button>
-                </form>
-                {assetSuccess && (
-                  <div className="p-3 bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs rounded-xl text-center">
-                    ✓ Hero mock slider asset replaced successfully!
+                  {/* Hero GIF replacer */}
+                  <div className="rounded-3xl bg-white/5 border border-white/10 p-6 flex flex-col gap-6 shadow-xl">
+                    <div>
+                      <h3 className="text-base font-bold text-white">Landing Page Hero GIF Replacer</h3>
+                      <p className="text-gray-450 text-xs mt-1">Replace animation slides on the landing page hero slider mockup.</p>
+                    </div>
+
+                    <form onSubmit={handleReplaceSlider} className="flex flex-col gap-4">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div className="flex flex-col gap-1.5">
+                          <label className="text-xs font-semibold text-gray-400">Select Mockup Slide</label>
+                          <select 
+                            value={sliderIndex}
+                            onChange={(e) => setSliderIndex(e.target.value)}
+                            className="px-4 py-2.5 bg-[#0c0f18] border border-white/10 rounded-xl focus:border-indigo-500 focus:outline-none text-white text-xs"
+                          >
+                            <option value="1">Slide 1 (Reels rendering mockup)</option>
+                            <option value="2">Slide 2 (Theme switcher mockup)</option>
+                            <option value="3">Slide 3 (Layout resizer mockup)</option>
+                          </select>
+                        </div>
+                        <div className="flex flex-col gap-1.5">
+                          <label className="text-xs font-semibold text-gray-400">New Animation GIF / Media URL</label>
+                          <input 
+                            type="url" 
+                            required
+                            placeholder="https://assets.adgravity.ai/animations/new-slide.gif"
+                            value={sliderAssetUrl}
+                            onChange={(e) => setSliderAssetUrl(e.target.value)}
+                            className="px-4 py-2.5 bg-white/5 border border-white/10 rounded-xl focus:border-indigo-500 focus:outline-none text-white text-xs font-mono"
+                          />
+                        </div>
+                      </div>
+
+                      <button 
+                        type="submit"
+                        className="w-full py-3 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-semibold text-xs transition-all active:scale-[0.98]"
+                      >
+                        Deploy New Hero Asset
+                      </button>
+                    </form>
+                    {assetSuccess && (
+                      <div className="p-3 bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs rounded-xl text-center">
+                        ✓ Hero mock slider asset replaced successfully!
+                      </div>
+                    )}
                   </div>
-                )}
+                </div>
               </div>
-            </div>
+            )}
+
+            {subAdminTab === 'category' && (
+              <CategoryController />
+            )}
           </div>
         )}
       </main>

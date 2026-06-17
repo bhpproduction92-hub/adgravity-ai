@@ -1,7 +1,8 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import { DEFAULT_CATEGORIES, CategoryItem } from '../../admin/control-center/CategoryController';
 
 export default function OnboardingPage() {
   const router = useRouter();
@@ -13,7 +14,30 @@ export default function OnboardingPage() {
   const [businessPhone, setBusinessPhone] = useState('');
   const [address, setAddress] = useState('');
   const [gmbLink, setGmbLink] = useState('');
-  const [category, setCategory] = useState('Cafe');
+  
+  // Custom searchable category list states
+  const [categories, setCategories] = useState<CategoryItem[]>([]);
+  const [category, setCategory] = useState('');
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+
+  useEffect(() => {
+    const saved = localStorage.getItem('adgravity_categories');
+    let loaded: CategoryItem[] = [];
+    if (saved) {
+      try {
+        loaded = JSON.parse(saved);
+      } catch (err) {
+        loaded = DEFAULT_CATEGORIES;
+      }
+    } else {
+      loaded = DEFAULT_CATEGORIES;
+    }
+    setCategories(loaded);
+    if (loaded.length > 0) {
+      setCategory(loaded[0].name);
+    }
+  }, []);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -35,6 +59,21 @@ export default function OnboardingPage() {
     // Redirect back to the dashboard
     router.push('/dashboard');
   };
+
+  // Filter categories based on search input
+  const filteredCategories = categories.filter((cat) =>
+    cat.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    cat.vertical.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
+  // Group filtered categories by their Indian Vertical category
+  const groupedCategories = filteredCategories.reduce((acc, cat) => {
+    if (!acc[cat.vertical]) {
+      acc[cat.vertical] = [];
+    }
+    acc[cat.vertical].push(cat);
+    return acc;
+  }, {} as Record<string, CategoryItem[]>);
 
   return (
     <div className="min-h-screen bg-[#07090e] text-gray-155 flex items-center justify-center p-6 selection:bg-indigo-500 selection:text-white">
@@ -116,18 +155,102 @@ export default function OnboardingPage() {
                 </div>
               </div>
 
-              <div className="flex flex-col gap-1.5">
+              {/* Custom Searchable Dropdown */}
+              <div className="flex flex-col gap-1.5 relative">
                 <label className="text-[11px] font-semibold text-gray-400">Business Category</label>
-                <select 
-                  value={category}
-                  onChange={(e) => setCategory(e.target.value)}
-                  className="px-4 py-2.5 rounded-xl bg-[#0c0f18] border border-white/10 focus:border-indigo-500 focus:outline-none text-white text-xs transition-all"
+                
+                {/* Dropdown Button */}
+                <button
+                  type="button"
+                  onClick={() => setDropdownOpen(!dropdownOpen)}
+                  className="w-full px-4 py-2.5 rounded-xl bg-[#0c0f18] border border-white/10 focus:border-indigo-500 focus:outline-none text-white text-xs transition-all flex justify-between items-center text-left"
                 >
-                  <option value="Cafe">Cafe / Restaurant</option>
-                  <option value="Pharmacy">Pharmacy / Healthcare</option>
-                  <option value="SaaS">SaaS Platform</option>
-                  <option value="Retail">Retail Store / Shop</option>
-                </select>
+                  <span className="truncate">{category || 'Select a Category'}</span>
+                  <svg 
+                    className={`w-4 h-4 text-gray-400 transition-transform ${dropdownOpen ? 'rotate-180' : ''}`} 
+                    fill="none" 
+                    stroke="currentColor" 
+                    viewBox="0 0 24 24"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+                  </svg>
+                </button>
+
+                {/* Dropdown Menu */}
+                {dropdownOpen && (
+                  <>
+                    <div className="fixed inset-0 z-40" onClick={() => setDropdownOpen(false)} />
+                    <div className="absolute top-[calc(100%+6px)] left-0 right-0 bg-[#0c0f18] border border-white/10 rounded-xl shadow-2xl z-50 overflow-hidden flex flex-col max-h-80 animate-fade-in">
+                      {/* Search Input */}
+                      <div className="p-3 border-b border-white/5 bg-[#080a10] flex items-center gap-2">
+                        <svg className="w-3.5 h-3.5 text-gray-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                        </svg>
+                        <input 
+                          type="text"
+                          placeholder="Search categories or verticals..."
+                          value={searchQuery}
+                          onChange={(e) => setSearchQuery(e.target.value)}
+                          className="w-full bg-transparent text-white text-xs focus:outline-none placeholder-gray-600"
+                          autoFocus
+                        />
+                        {searchQuery && (
+                          <button 
+                            type="button" 
+                            onClick={() => setSearchQuery('')}
+                            className="text-gray-500 hover:text-white text-xs px-1"
+                          >
+                            ✕
+                          </button>
+                        )}
+                      </div>
+
+                      {/* Options list */}
+                      <div className="overflow-y-auto flex-1 p-2 max-h-60 scrollbar-thin scrollbar-thumb-white/10">
+                        {Object.keys(groupedCategories).length === 0 ? (
+                          <div className="p-4 text-center text-gray-500 italic text-[11px]">
+                            No categories matched your search
+                          </div>
+                        ) : (
+                          Object.entries(groupedCategories).map(([verticalName, items]) => (
+                            <div key={verticalName} className="mb-2 last:mb-0">
+                              {/* Vertical Header */}
+                              <div className="px-2 py-1 text-[9px] font-bold text-indigo-400 uppercase tracking-wider bg-indigo-500/5 rounded-md mb-1">
+                                {verticalName}
+                              </div>
+                              {/* Items under Vertical */}
+                              <div className="flex flex-col gap-0.5">
+                                {items.map((item) => (
+                                  <button
+                                    key={item.id}
+                                    type="button"
+                                    onClick={() => {
+                                      setCategory(item.name);
+                                      setDropdownOpen(false);
+                                      setSearchQuery('');
+                                    }}
+                                    className={`w-full px-3 py-2 text-left rounded-lg text-xs transition-colors flex justify-between items-center ${
+                                      category === item.name 
+                                        ? 'bg-indigo-600/20 text-indigo-300 font-bold border border-indigo-500/20' 
+                                        : 'text-gray-300 hover:bg-white/5 hover:text-white border border-transparent'
+                                    }`}
+                                  >
+                                    <span>{item.name}</span>
+                                    {item.layouts && (
+                                      <span className="text-[9px] text-gray-500 font-normal truncate max-w-[150px]">
+                                        {item.layouts}
+                                      </span>
+                                    )}
+                                  </button>
+                                ))}
+                              </div>
+                            </div>
+                          ))
+                        )}
+                      </div>
+                    </div>
+                  </>
+                )}
               </div>
 
               <div className="flex flex-col gap-1.5">
