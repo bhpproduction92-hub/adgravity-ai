@@ -7,29 +7,36 @@ const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000';
 
 function DashboardContent() {
   const router = useRouter();
-  const searchParams = useSearchParams();
   
-  // Pre-fill business name from landing page onboarding input if present
-  const businessNameQuery = searchParams.get('businessName') || '';
-
-  // Form states
+  // Profile state for Step-locking logic
+  const [profile, setProfile] = useState<any>(null);
+  
+  // Form states (synced with profile metadata)
   const [userId, setUserId] = useState('');
   const [email, setEmail] = useState('');
   const [fullName, setFullName] = useState('');
-  const [companyName, setCompanyName] = useState(businessNameQuery || '');
+  const [companyName, setCompanyName] = useState('');
   const [category, setCategory] = useState('Cafe');
   const [metaPageToken, setMetaPageToken] = useState('EAAbwY7b43...mocktoken');
-  
+
+  // AI Logo Generator States
+  const [finalizedLogo, setFinalizedLogo] = useState<string | null>(null);
+  const [selectedLogoIndex, setSelectedLogoIndex] = useState<number | null>(null);
+  const [uploadedLogoUrl, setUploadedLogoUrl] = useState<string | null>(null);
+
   // Credit state
   const [credits, setCredits] = useState(1);
   const [maxCredits, setMaxCredits] = useState(1);
 
-  // Loading & status states
+  // Subscription / Payment states
   const [loading, setLoading] = useState(false);
   const [response, setResponse] = useState<any>(null);
   const [error, setError] = useState<string | null>(null);
   const [paymentStep, setPaymentStep] = useState<'idle' | 'processing' | 'success'>('idle');
   const [paymentMessage, setPaymentMessage] = useState('');
+  const [showSubscriptionPopup, setShowSubscriptionPopup] = useState(false);
+  const [selectedUpiMethod, setSelectedUpiMethod] = useState<'gpay' | 'phonepe' | null>(null);
+  const [upiAddress, setUpiAddress] = useState('');
 
   // AI Content Generator states
   const [offerDetails, setOfferDetails] = useState('');
@@ -48,6 +55,28 @@ function DashboardContent() {
     setUserId('user_' + Math.random().toString(36).substring(2, 9));
   }, []);
 
+  // Step-locking: Redirect to onboarding if profile is missing
+  useEffect(() => {
+    const savedProfile = localStorage.getItem('adgravity_profile');
+    if (!savedProfile) {
+      router.replace('/dashboard/onboarding');
+    } else {
+      const parsed = JSON.parse(savedProfile);
+      setProfile(parsed);
+      setCompanyName(parsed.businessName);
+      setCategory(parsed.category);
+      setFullName(parsed.personalName);
+      setEmail(parsed.address); // fallback to complete address or default
+      setUpiAddress(parsed.personalPhone ? `${parsed.personalPhone}@okaxis` : '9876543210@okaxis');
+      
+      // Load saved finalized logo if it exists
+      const savedLogo = localStorage.getItem('adgravity_logo');
+      if (savedLogo) {
+        setFinalizedLogo(savedLogo);
+      }
+    }
+  }, [router]);
+
   // Fetch status & queue on request
   const fetchStatus = async () => {
     if (!userId) return;
@@ -58,7 +87,7 @@ function DashboardContent() {
         const data = await res.json();
         if (data.subscription) {
           setResponse({ subscription: data.subscription });
-          // If trial/active, set credits higher or unlimited
+          // If trial/active, upgrade credits
           if (data.subscription.status === 'Trial' || data.subscription.status === 'active') {
             setCredits(10);
             setMaxCredits(10);
@@ -79,10 +108,10 @@ function DashboardContent() {
   };
 
   useEffect(() => {
-    if (userId) {
+    if (userId && profile) {
       fetchStatus();
     }
-  }, [userId]);
+  }, [userId, profile]);
 
   const handleGenerateContent = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -133,6 +162,7 @@ function DashboardContent() {
     }
   };
 
+  // UPI Autodebit payment flow
   const handleRegisterTrial = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
@@ -141,12 +171,11 @@ function DashboardContent() {
     setPaymentStep('processing');
 
     try {
-      // Simulate 3-second secure payment gateway connection
-      setPaymentMessage('Connecting to secure payment gateway...');
+      setPaymentMessage('Verifying UPI Auto-Debit Autopay mandate...');
       await new Promise(resolve => setTimeout(resolve, 1000));
-      setPaymentMessage('Processing ₹1 transaction via sandbox...');
+      setPaymentMessage('Processing ₹1.00 verification fee via GPay/PhonePe...');
       await new Promise(resolve => setTimeout(resolve, 1000));
-      setPaymentMessage('Authorizing 7-day trial subscription details...');
+      setPaymentMessage('Securing recurring mandate authorization...');
       await new Promise(resolve => setTimeout(resolve, 1000));
 
       const res = await fetch(`${API_BASE_URL}/api/subscriptions/trial`, {
@@ -158,9 +187,9 @@ function DashboardContent() {
           userId,
           businessName: companyName,
           businessDetails: {
-            email,
-            fullName,
-            category,
+            email: profile.email || 'partner@example.com',
+            fullName: profile.personalName,
+            category: profile.category,
             metaPageToken,
             activatedAt: new Date().toISOString()
           }
@@ -176,6 +205,7 @@ function DashboardContent() {
       setPaymentStep('success');
       setCredits(10);
       setMaxCredits(10);
+      setShowSubscriptionPopup(false);
       fetchStatus();
     } catch (err: any) {
       setError(err.message || 'Failed to connect to backend server. Make sure it is running on Render.');
@@ -185,6 +215,125 @@ function DashboardContent() {
     }
   };
 
+  // Logo uploader
+  const handleLogoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setUploadedLogoUrl(reader.result as string);
+        setSelectedLogoIndex(null); // Deselect AI logo
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  // Lock selected logo
+  const handleFinalizeLogo = () => {
+    let logoValue = '';
+    if (uploadedLogoUrl) {
+      logoValue = uploadedLogoUrl;
+    } else if (selectedLogoIndex !== null) {
+      logoValue = `AI_LOGO_${selectedLogoIndex}`;
+    } else {
+      alert('Please select an AI logo or upload your own to finalize!');
+      return;
+    }
+
+    setFinalizedLogo(logoValue);
+    localStorage.setItem('adgravity_logo', logoValue);
+    
+    // Once finalized, immediately prompt subscription popup if user does not have active subscription
+    if (!response?.subscription) {
+      setShowSubscriptionPopup(true);
+    }
+  };
+
+  // Helper to generate initials for SVG logos
+  const getInitials = () => {
+    if (!companyName) return 'AG';
+    return companyName.split(' ').map(w => w[0]).join('').substring(0, 2).toUpperCase();
+  };
+
+  // Vector Logo render templates
+  const renderLogoSVG = (index: number) => {
+    const initials = getInitials();
+    const isSelected = selectedLogoIndex === index && !uploadedLogoUrl;
+
+    const baseClass = `w-full h-full p-6 flex flex-col items-center justify-center border-2 rounded-2xl cursor-pointer transition-all ${
+      isSelected ? 'bg-indigo-600/10 border-indigo-500' : 'bg-white/[0.01] border-white/5 hover:border-white/20'
+    }`;
+
+    // Customize icons based on category
+    let innerIcon = (
+      <svg className="w-8 h-8 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+      </svg>
+    );
+
+    if (category === 'Cafe') {
+      innerIcon = (
+        <span className="text-3xl">☕</span>
+      );
+    } else if (category === 'Pharmacy') {
+      innerIcon = (
+        <span className="text-3xl">🩺</span>
+      );
+    } else if (category === 'SaaS') {
+      innerIcon = (
+        <span className="text-3xl">💻</span>
+      );
+    } else if (category === 'Retail') {
+      innerIcon = (
+        <span className="text-3xl">🛍️</span>
+      );
+    }
+
+    if (index === 1) {
+      return (
+        <div onClick={() => { setSelectedLogoIndex(1); setUploadedLogoUrl(null); }} className={baseClass}>
+          <div className="w-16 h-16 rounded-full bg-indigo-500/10 flex items-center justify-center mb-2">
+            {innerIcon}
+          </div>
+          <span className="text-xs font-bold tracking-widest text-white">{initials}</span>
+          <span className="text-[8px] text-gray-500 uppercase mt-0.5">Minimalist</span>
+        </div>
+      );
+    }
+
+    if (index === 2) {
+      return (
+        <div onClick={() => { setSelectedLogoIndex(2); setUploadedLogoUrl(null); }} className={baseClass}>
+          <div className="w-16 h-16 rounded-2xl bg-violet-500/10 border-2 border-violet-500/20 flex items-center justify-center mb-2 rotate-45 group hover:rotate-90 transition-transform duration-500">
+            <div className="-rotate-45 font-bold text-white text-lg">{initials}</div>
+          </div>
+          <span className="text-[8px] text-gray-500 uppercase mt-1">Shield/Badge</span>
+        </div>
+      );
+    }
+
+    if (index === 3) {
+      return (
+        <div onClick={() => { setSelectedLogoIndex(3); setUploadedLogoUrl(null); }} className={baseClass}>
+          <div className="w-16 h-16 bg-gradient-to-tr from-sky-600 to-indigo-500 rounded-3xl flex items-center justify-center mb-2 shadow-lg shadow-sky-500/15">
+            <span className="text-white text-xl font-black">{initials}</span>
+          </div>
+          <span className="text-[8px] text-gray-500 uppercase mt-0.5">Modern Tech</span>
+        </div>
+      );
+    }
+
+    return (
+      <div onClick={() => { setSelectedLogoIndex(4); setUploadedLogoUrl(null); }} className={baseClass}>
+        <div className="w-16 h-16 border-2 border-dashed border-gray-700 hover:border-gray-500 rounded-full flex items-center justify-center mb-2">
+          <span className="text-gray-400 text-lg font-serif italic">{initials[0]}</span>
+        </div>
+        <span className="text-xs font-heading font-semibold text-gray-300">{companyName.slice(0, 10)}</span>
+        <span className="text-[8px] text-gray-500 uppercase mt-0.5">Typographic</span>
+      </div>
+    );
+  };
+
   // Mock Calendar Posts Data
   const calendarPosts = [
     { day: 12, name: 'Assam Medicose Ad', status: 'published', type: 'Vernacular' },
@@ -192,6 +341,17 @@ function DashboardContent() {
     { day: 17, name: 'Special Weekend Discount', status: 'pending', type: 'Reel' },
     { day: 24, name: 'Monsoon Mega Sale', status: 'scheduled', type: 'Image' }
   ];
+
+  if (!profile) {
+    return (
+      <div className="min-h-screen bg-[#07090e] text-gray-150 flex items-center justify-center">
+        <div className="flex flex-col items-center gap-4">
+          <div className="w-10 h-10 border-4 border-indigo-500/25 border-t-indigo-500 rounded-full animate-spin" />
+          <span className="text-xs text-gray-500 font-sans">Checking profile configuration...</span>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-[#07090e] text-gray-100 flex flex-col font-sans selection:bg-indigo-500 selection:text-white pb-12">
@@ -213,9 +373,12 @@ function DashboardContent() {
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" /> Active Trial
               </span>
             ) : (
-              <span className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/20 text-amber-400 text-xs font-semibold">
-                ⚠️ Unsubscribed
-              </span>
+              <button
+                onClick={() => setShowSubscriptionPopup(true)}
+                className="px-3 py-1 rounded-full bg-amber-500/15 border border-amber-500/20 hover:border-amber-500/40 text-amber-400 text-xs font-semibold"
+              >
+                ⚠️ Start ₹1 Trial
+              </button>
             )}
             <button 
               onClick={fetchStatus}
@@ -230,8 +393,60 @@ function DashboardContent() {
       {/* Main Grid */}
       <main className="flex-1 w-full max-w-7xl mx-auto px-6 py-8 grid grid-cols-1 lg:grid-cols-12 gap-8">
         
-        {/* Left 4 Cols: Subscription Status & Credits tracker */}
+        {/* Left 4 Cols: Subscription Status & Branding Profile */}
         <div className="lg:col-span-4 flex flex-col gap-6">
+          {/* Visual Profile & Locked Logo */}
+          <div className="rounded-3xl bg-white/5 border border-white/10 p-6 flex flex-col gap-4 shadow-xl">
+            <div className="flex justify-between items-center border-b border-white/5 pb-3">
+              <h3 className="text-sm font-semibold tracking-wide text-gray-400 uppercase">My Brand Workspace</h3>
+              <span className="text-[10px] text-indigo-400 uppercase font-semibold">Active</span>
+            </div>
+            
+            {/* Display profile metadata */}
+            <div className="flex flex-col gap-2.5 text-xs text-gray-400">
+              <div className="flex justify-between">
+                <span>Personal Name:</span>
+                <strong className="text-white">{profile.personalName}</strong>
+              </div>
+              <div className="flex justify-between">
+                <span>Business Name:</span>
+                <strong className="text-white">{profile.businessName}</strong>
+              </div>
+              <div className="flex justify-between">
+                <span>Phone:</span>
+                <strong className="text-white">{profile.businessPhone}</strong>
+              </div>
+              <div className="flex justify-between">
+                <span>Category:</span>
+                <strong className="text-white">{profile.category}</strong>
+              </div>
+            </div>
+
+            {/* Logo display container */}
+            <div className="border border-white/5 bg-white/[0.01] rounded-2xl p-4 flex flex-col items-center gap-3">
+              <span className="text-[10px] text-gray-500 uppercase font-semibold">Locked Logo Asset</span>
+              {finalizedLogo ? (
+                <div className="flex flex-col items-center gap-2">
+                  {finalizedLogo.startsWith('AI_LOGO_') ? (
+                    <div className="w-20 h-20 rounded-2xl bg-indigo-500/10 flex items-center justify-center border border-indigo-500/30">
+                      <span className="text-white font-black text-xl">{getInitials()}</span>
+                    </div>
+                  ) : (
+                    <img src={finalizedLogo} alt="Finalized Logo" className="w-20 h-20 rounded-2xl object-cover border border-white/10" />
+                  )}
+                  <span className="text-[10px] text-emerald-400 font-bold flex items-center gap-1">
+                    🔒 Logo Locked & Finalized
+                  </span>
+                </div>
+              ) : (
+                <div className="text-center py-4 flex flex-col items-center gap-1">
+                  <span className="text-lg">🔓</span>
+                  <span className="text-[10px] text-gray-400">No finalized logo found. Use the editor to lock one.</span>
+                </div>
+              )}
+            </div>
+          </div>
+
           {/* Credit Tracker Card */}
           <div className="rounded-3xl bg-white/5 border border-white/10 p-6 flex flex-col gap-4 shadow-xl">
             <div className="flex justify-between items-center">
@@ -249,149 +464,71 @@ function DashboardContent() {
                   style={{ width: `${(credits / maxCredits) * 100}%` }}
                 />
               </div>
-              <span className="text-[10px] text-gray-400 mt-1">
-                {credits > 0 ? 'Use your credit to generate bilingual ad copies below.' : 'Credits depleted. Start a ₹1 trial to get more credits!'}
+              <span className="text-[10px] text-gray-450 mt-1">
+                {credits > 0 ? 'Use your credit to generate bilingual ad copies.' : 'Credits depleted. Start a ₹1 trial to replenish!'}
               </span>
             </div>
           </div>
+        </div>
 
-          {/* Trial Form Card */}
+        {/* Right 8 Cols: AI Logo generator, AI ad Generator, Calendar Grid */}
+        <div className="lg:col-span-8 flex flex-col gap-8">
+          
+          {/* AI Logo Generator System Panel (Shows if logo not finalized, or allows updates) */}
           <div className="rounded-3xl bg-white/5 border border-white/10 p-6 flex flex-col gap-6 shadow-xl">
             <div>
-              <h3 className="text-lg font-bold text-white">Setup 7-Day Trial</h3>
+              <h3 className="text-lg font-bold text-white">AI Logo Generator System</h3>
               <p className="text-gray-400 text-xs mt-1">
-                Create user profile and unlock ₹1 trial access.
+                Select one AI logo design vector or upload your custom logo to finalize branding.
               </p>
             </div>
 
-            <form onSubmit={handleRegisterTrial} className="flex flex-col gap-4">
-              <div className="flex flex-col gap-1.5">
-                <label className="text-xs font-semibold text-gray-400">User ID (Simulated Auth)</label>
-                <input 
-                  type="text" 
-                  required
-                  value={userId}
-                  onChange={(e) => setUserId(e.target.value)}
-                  className="px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 focus:border-indigo-500 focus:outline-none text-white text-sm transition-all"
-                />
-              </div>
+            {/* 2x2 Grid of Logo variations */}
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+              {renderLogoSVG(1)}
+              {renderLogoSVG(2)}
+              {renderLogoSVG(3)}
+              {renderLogoSVG(4)}
+            </div>
 
-              <div className="flex flex-col gap-1.5">
-                <label className="text-xs font-semibold text-gray-400">Full Name</label>
-                <input 
-                  type="text" 
-                  required
-                  placeholder="Jane Doe"
-                  value={fullName}
-                  onChange={(e) => setFullName(e.target.value)}
-                  className="px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 focus:border-indigo-500 focus:outline-none text-white text-sm transition-all"
-                />
+            {/* Custom Logo Uploader */}
+            <div className="flex flex-col sm:flex-row items-center gap-4 justify-between border-t border-white/5 pt-4">
+              <div className="flex flex-col gap-1">
+                <span className="text-xs font-semibold text-white">Custom Upload</span>
+                <span className="text-[10px] text-gray-500">Upload your own .png or .jpg brand mark</span>
               </div>
-
-              <div className="flex flex-col gap-1.5">
-                <label className="text-xs font-semibold text-gray-400">Email Address</label>
+              <div className="flex items-center gap-3">
                 <input 
-                  type="email" 
-                  required
-                  placeholder="jane@example.com"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 focus:border-indigo-500 focus:outline-none text-white text-sm transition-all"
+                  type="file" 
+                  accept="image/*"
+                  id="logo-upload"
+                  onChange={handleLogoUpload}
+                  className="hidden"
                 />
-              </div>
-
-              <div className="flex flex-col gap-1.5">
-                <label className="text-xs font-semibold text-gray-400">Company Name</label>
-                <input 
-                  type="text" 
-                  required
-                  placeholder="Green Cafe Guwahati"
-                  value={companyName}
-                  onChange={(e) => setCompanyName(e.target.value)}
-                  className="px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 focus:border-indigo-500 focus:outline-none text-white text-sm transition-all"
-                />
-              </div>
-
-              <div className="flex flex-col gap-1.5">
-                <label className="text-xs font-semibold text-gray-400">Business Category</label>
-                <select 
-                  value={category}
-                  onChange={(e) => setCategory(e.target.value)}
-                  className="px-4 py-2.5 rounded-xl bg-[#0c0f18] border border-white/10 focus:border-indigo-500 focus:outline-none text-white text-sm transition-all"
+                <label 
+                  htmlFor="logo-upload"
+                  className="px-4 py-2 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 cursor-pointer text-xs font-semibold transition-all active:scale-95"
                 >
-                  <option value="Cafe">Cafe / Restaurant</option>
-                  <option value="Pharmacy">Pharmacy / Health</option>
-                  <option value="SaaS">SaaS Platform</option>
-                  <option value="Retail">Retail Store</option>
-                </select>
+                  Choose Custom File
+                </label>
+                {uploadedLogoUrl && (
+                  <div className="w-10 h-10 rounded border border-white/10 overflow-hidden relative">
+                    <img src={uploadedLogoUrl} alt="custom logo preview" className="w-full h-full object-cover" />
+                  </div>
+                )}
               </div>
+            </div>
 
-              <div className="flex flex-col gap-1.5">
-                <div className="flex justify-between items-center">
-                  <label className="text-xs font-semibold text-gray-400 font-sans">Meta Page Token</label>
-                  <button 
-                    type="button" 
-                    onClick={() => setIsOAuthOpen(true)}
-                    className="text-[10px] font-bold text-indigo-400 hover:text-indigo-300"
-                  >
-                    Connect Facebook
-                  </button>
-                </div>
-                <input 
-                  type="text" 
-                  required
-                  value={metaPageToken}
-                  onChange={(e) => setMetaPageToken(e.target.value)}
-                  className="px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 focus:border-indigo-500 focus:outline-none text-white text-sm transition-all"
-                />
-              </div>
-
-              <div className="bg-white/[0.02] p-4 rounded-2xl border border-white/5 flex flex-col gap-2 mt-2 text-xs">
-                <div className="flex justify-between text-gray-300">
-                  <span>7-Day Trial Price</span>
-                  <strong className="text-white">₹1.00</strong>
-                </div>
-                <div className="flex justify-between text-gray-500">
-                  <span>Billing Currency</span>
-                  <span>INR (₹)</span>
-                </div>
-              </div>
-
-              <button 
-                type="submit" 
-                disabled={loading}
-                className="w-full mt-2 py-3.5 rounded-xl bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 disabled:from-indigo-650 disabled:to-violet-650 text-white font-semibold text-sm transition-all active:scale-[0.98] shadow-lg shadow-indigo-500/10 flex items-center justify-center gap-2"
-              >
-                {loading ? 'Processing ₹1 payment...' : 'Activate Trial for ₹1'}
-              </button>
-            </form>
-
-            {/* Error Message */}
-            {error && (
-              <div className="p-4 bg-red-500/10 border border-red-500/20 text-red-300 text-xs rounded-2xl leading-relaxed">
-                <strong>Error:</strong> {error}
-              </div>
-            )}
-
-            {/* Success Message */}
-            {response && (
-              <div className="p-4 bg-emerald-500/10 border border-emerald-500/20 text-emerald-300 text-xs rounded-2xl flex flex-col gap-2">
-                <h4 className="font-bold text-sm">🎉 Subscription Registered!</h4>
-                <div className="flex flex-col gap-1 opacity-90 mt-1">
-                  <div><strong>ID:</strong> {response.subscription.id.slice(0, 12)}...</div>
-                  <div><strong>Plan:</strong> {response.subscription.plan_type}</div>
-                  <div><strong>Status:</strong> {response.subscription.status}</div>
-                  <div><strong>End:</strong> {new Date(response.subscription.trial_end_date).toLocaleDateString()}</div>
-                </div>
-              </div>
-            )}
+            {/* Finalize Logo button */}
+            <button 
+              onClick={handleFinalizeLogo}
+              className="w-full py-3.5 rounded-xl bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 text-white font-semibold text-sm transition-all active:scale-[0.98]"
+            >
+              Finalize Logo & Connect Workspace
+            </button>
           </div>
-        </div>
 
-        {/* Right 8 Cols: AI Generator & Queue & Calendar Grid */}
-        <div className="lg:col-span-8 flex flex-col gap-8">
-          
-          {/* AI Content Engine */}
+          {/* AI Ad Generator Section */}
           <div className="rounded-3xl bg-white/5 border border-white/10 p-6 flex flex-col gap-6 shadow-xl">
             <div>
               <h3 className="text-lg font-bold text-white">Core AI Content Engine</h3>
@@ -462,11 +599,10 @@ function DashboardContent() {
             <div>
               <h3 className="text-lg font-bold text-white">Post History Calendar</h3>
               <p className="text-gray-400 text-xs mt-1">
-                Track your active, pending, and scheduled social campaigns.
+                Track your active, pending, and scheduled campaigns.
               </p>
             </div>
 
-            {/* Calendar Layout */}
             <div className="flex flex-col gap-4">
               <div className="flex justify-between items-center text-xs text-gray-400 font-semibold px-2">
                 <span>June 2026</span>
@@ -479,12 +615,10 @@ function DashboardContent() {
 
               {/* Grid 7 Columns for Days */}
               <div className="grid grid-cols-7 gap-2 text-center text-xs">
-                {/* Weekday headers */}
                 {['S', 'M', 'T', 'W', 'T', 'F', 'S'].map((day) => (
                   <div key={day} className="text-gray-500 font-bold py-1">{day}</div>
                 ))}
                 
-                {/* Days 1 to 30 with dummy offsets */}
                 {Array.from({ length: 30 }).map((_, index) => {
                   const day = index + 1;
                   const activePost = calendarPosts.find((p) => p.day === day);
@@ -496,7 +630,7 @@ function DashboardContent() {
                         activePost?.status === 'published' ? 'bg-emerald-950/20 border-emerald-500/30 text-emerald-300' :
                         activePost?.status === 'pending' ? 'bg-amber-950/20 border-amber-500/30 text-amber-300' :
                         activePost?.status === 'scheduled' ? 'bg-indigo-950/20 border-indigo-500/30 text-indigo-300' :
-                        'bg-white/[0.01] border-white/5 text-gray-500 hover:bg-white/5'
+                        'bg-white/[0.01] border-white/5 text-gray-505 hover:bg-white/5'
                       }`}
                     >
                       <span className="font-semibold self-start text-[10px]">{day}</span>
@@ -546,7 +680,7 @@ function DashboardContent() {
                       </div>
                       
                       <div className="flex flex-col gap-1 text-xs">
-                        <span className="text-gray-500 font-semibold">Prompt</span>
+                        <span className="text-gray-505 font-semibold">Prompt</span>
                         <p className="text-gray-300 italic">"{item.prompt}"</p>
                       </div>
 
@@ -585,7 +719,7 @@ function DashboardContent() {
 
       {/* Mock Payment Processing Overlay */}
       {paymentStep === 'processing' && (
-        <div className="fixed inset-0 bg-black/75 backdrop-blur-md flex items-center justify-center z-[1000]">
+        <div className="fixed inset-0 bg-black/75 backdrop-blur-md flex items-center justify-center z-[3000]">
           <div className="rounded-3xl bg-[#0c0f18] border-2 border-indigo-600 p-8 flex flex-col items-center gap-6 max-w-sm w-[90%] text-center shadow-2xl">
             <div className="w-12 h-12 border-4 border-indigo-500/25 border-t-indigo-500 rounded-full animate-spin" />
             <div>
@@ -657,6 +791,92 @@ function DashboardContent() {
                 >
                   Back
                 </button>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* UPI Autodebit 7-Day Trial Popup Framework */}
+      {showSubscriptionPopup && (
+        <div className="fixed inset-0 bg-black/80 backdrop-blur-md flex items-center justify-center z-[1500]">
+          <div className="rounded-3xl bg-[#0c0f18] border border-white/10 p-6 max-w-md w-[90%] flex flex-col gap-6 shadow-2xl relative">
+            {/* Close button */}
+            <button 
+              onClick={() => setShowSubscriptionPopup(false)}
+              className="absolute top-4 right-4 text-gray-500 hover:text-white text-lg font-bold"
+            >
+              ✕
+            </button>
+            
+            <div className="flex flex-col gap-1.5">
+              <span className="text-[10px] uppercase tracking-wider text-indigo-400 font-bold">Subscription Mandate</span>
+              <h3 className="text-lg font-extrabold text-white">Activate 7-Day Trial for ₹1</h3>
+              <p className="text-gray-400 text-xs leading-relaxed">
+                Setup an Auto-Debit UPI mandate. Authorize ₹1 today; recurring ₹999/month starts automatically in 7 days. Cancel anytime inside settings.
+              </p>
+            </div>
+
+            {/* UPI Selection Buttons */}
+            <div className="flex gap-4">
+              <button 
+                type="button"
+                onClick={() => setSelectedUpiMethod('gpay')}
+                className={`flex-1 py-3 rounded-xl border flex flex-col items-center gap-1.5 transition-all ${
+                  selectedUpiMethod === 'gpay' ? 'bg-indigo-600/10 border-indigo-500 text-white' : 'bg-white/[0.01] border-white/5 text-gray-400 hover:text-white'
+                }`}
+              >
+                <span className="text-2xl">📱</span>
+                <span className="text-xs font-semibold">Google Pay</span>
+              </button>
+              <button 
+                type="button"
+                onClick={() => setSelectedUpiMethod('phonepe')}
+                className={`flex-1 py-3 rounded-xl border flex flex-col items-center gap-1.5 transition-all ${
+                  selectedUpiMethod === 'phonepe' ? 'bg-indigo-600/10 border-indigo-500 text-white' : 'bg-white/[0.01] border-white/5 text-gray-400 hover:text-white'
+                }`}
+              >
+                <span className="text-2xl">💜</span>
+                <span className="text-xs font-semibold">PhonePe</span>
+              </button>
+            </div>
+
+            {/* If UPI method selected */}
+            {selectedUpiMethod && (
+              <div className="flex flex-col gap-4 border-t border-white/5 pt-4 bg-white/[0.01] p-4 rounded-2xl border border-white/5">
+                <div className="flex justify-between items-center text-xs">
+                  <span className="text-gray-400">UPI Mandate Address:</span>
+                  <span className="text-indigo-400 font-bold uppercase tracking-wider">{selectedUpiMethod}</span>
+                </div>
+                
+                <input 
+                  type="text"
+                  value={upiAddress}
+                  onChange={(e) => setUpiAddress(e.target.value)}
+                  className="px-4 py-2.5 rounded-xl bg-[#07090e] border border-white/10 focus:border-indigo-500 focus:outline-none text-white text-xs font-mono"
+                />
+
+                <div className="flex gap-4 items-center mt-2 border-t border-white/5 pt-3">
+                  {/* Mock QR Code */}
+                  <div className="w-20 h-20 bg-white p-1 rounded-lg flex items-center justify-center shrink-0">
+                    <svg className="w-full h-full text-black" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M3 3h8v8H3zm2 2v4h4V5zm8-2h8v8h-8zm2 2v4h4V5zM3 13h8v8H3zm2 2v4h4v-4zm13-1h3v2h-3zm-3 3h3v3h-3zm3 0h3v-2h-3zm-3-3h3v2h-3zm3 5h3v-2h-3zm-3-5h1v1h-1zm2 1h1v1h-1zm-1 2h1v1h-1zm-4-3h1v1h-1zm1 1h1v1h-1zm-1 2h1v1h-1zm4-3h1v1h-1zm1 1h1v1h-1z" />
+                    </svg>
+                  </div>
+                  <div className="flex flex-col gap-1 text-[10px] text-gray-400">
+                    <span>Scan QR Code to pay ₹1 & set up the recurring mandate on your mobile GPay / PhonePe app.</span>
+                    <span className="text-gray-650 font-semibold mt-1">UPI ID: adgravity.autodebit@hdfc</span>
+                  </div>
+                </div>
+
+                <form onSubmit={handleRegisterTrial}>
+                  <button 
+                    type="submit"
+                    className="w-full py-3.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-semibold text-xs transition-all active:scale-[0.98] shadow-lg shadow-emerald-500/15"
+                  >
+                    Authorize Mandate (₹1.00)
+                  </button>
+                </form>
               </div>
             )}
           </div>
