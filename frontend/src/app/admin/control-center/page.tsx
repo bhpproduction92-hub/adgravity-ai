@@ -92,6 +92,13 @@ export default function ControlCenterPage() {
           </div>
 
           <div className="flex items-center gap-4">
+            <button
+              onClick={() => router.push('/admin/seo-manager')}
+              className="px-3 py-2 rounded-xl bg-white/5 hover:bg-white/10 text-white font-semibold text-xs border border-white/10 transition-all active:scale-95 flex items-center gap-1.5"
+            >
+              SEO Manager 🚀
+            </button>
+
             {/* Role Switch Toggle */}
             <div className="flex bg-white/5 p-1 rounded-xl border border-white/10 text-xs">
               <button

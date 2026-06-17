@@ -471,6 +471,44 @@ export default function LandingPage() {
           <Link href="/contact" className="hover:text-white transition-colors">Support Desk</Link>
         </div>
       </footer>
+
+      {/* Dynamic SEO JSON-LD Injections */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@graph": [
+              {
+                "@type": "SoftwareApplication",
+                "@id": "https://ai.bhpproduction.com/#application",
+                "name": "AdGravity.AI",
+                "url": "https://ai.bhpproduction.com",
+                "operatingSystem": "All",
+                "applicationCategory": "BusinessApplication",
+                "description": "Boost your business outreach using AdGravity AI. Sign up for a 7-day trial subscription for just ₹1.",
+                "offers": {
+                  "@type": "AggregateOffer",
+                  "priceCurrency": "INR",
+                  "lowPrice": "499",
+                  "highPrice": "1999",
+                  "offerCount": "3"
+                },
+                "author": {
+                  "@type": "Person",
+                  "name": "Hridaya Nanda Sarma",
+                  "jobTitle": "Media Entrepreneur & Visionary Leader"
+                },
+                "publisher": {
+                  "@type": "Organization",
+                  "name": "BHP Production",
+                  "url": "https://ai.bhpproduction.com"
+                }
+              }
+            ]
+          })
+        }}
+      />
     </div>
   );
 }
