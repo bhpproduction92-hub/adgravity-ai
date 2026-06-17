@@ -29,7 +29,7 @@ export default function ThemeToggle() {
   const themeMeta = {
     light: { label: 'Light', icon: '☀️' },
     dark: { label: 'Dark', icon: '🌙' },
-    bright: { label: 'Google Bright', icon: '🌈' },
+    bright: { label: '💎 AdGravity Ultra Premium', icon: '🌈' },
     standard: { label: 'Standard Dark', icon: '💻' }
   };
 

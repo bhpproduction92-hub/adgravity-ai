@@ -160,7 +160,7 @@ export default function OnboardingPage() {
         
         {/* Step 1: PROFILE SETUP */}
         {step === 'profile' && (
-          <div className="w-full max-w-xl bg-card-bg border border-border-custom rounded-3xl p-8 shadow-[0_8px_30px_rgba(0,0,0,0.04)] animate-fade-in">
+          <div className="w-full max-w-xl bg-white shadow-[0_12px_40px_rgba(0,0,0,0.04)] border border-slate-100/80 rounded-2xl p-8 animate-fade-in">
             <div className="flex flex-col items-center gap-2 mb-8 text-center">
               <span className="text-[10px] uppercase tracking-widest text-accent-custom font-extrabold">Step 1 of 3</span>
               <h1 className="text-2xl font-black text-text-primary font-heading">
@@ -343,7 +343,7 @@ export default function OnboardingPage() {
 
         {/* Step 2: AI LOGO GENERATION */}
         {step === 'logo_generation' && (
-          <div className="w-full max-w-2xl bg-card-bg border border-border-custom rounded-3xl p-8 shadow-[0_8px_30px_rgba(0,0,0,0.04)] animate-fade-in">
+          <div className="w-full max-w-2xl bg-white shadow-[0_12px_40px_rgba(0,0,0,0.04)] border border-slate-100/80 rounded-2xl p-8 animate-fade-in">
             <div className="flex flex-col items-center gap-2 mb-8 text-center">
               <span className="text-[10px] uppercase tracking-widest text-accent-custom font-extrabold">Step 2 of 3</span>
               <h1 className="text-2xl font-black text-text-primary font-heading">
@@ -481,7 +481,7 @@ export default function OnboardingPage() {
 
         {/* Step 3: ₹1 UPI TRIAL SUBSCRIPTION */}
         {step === 'trial_payment' && (
-          <div className="w-full max-w-md bg-card-bg border border-border-custom rounded-3xl p-8 shadow-[0_8px_30px_rgba(0,0,0,0.04)] animate-fade-in">
+          <div className="w-full max-w-md bg-white shadow-[0_12px_40px_rgba(0,0,0,0.04)] border border-slate-100/80 rounded-2xl p-8 animate-fade-in">
             <div className="flex flex-col items-center gap-2 mb-6 text-center">
               <span className="text-[10px] uppercase tracking-widest text-accent-custom font-extrabold">Step 3 of 3</span>
               <h1 className="text-2xl font-black text-text-primary font-heading">

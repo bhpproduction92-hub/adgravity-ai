@@ -11,7 +11,7 @@ export function DashboardMetricsCard({ credits, maxCredits }: MetricProps) {
   const percentage = (credits / maxCredits) * 100;
 
   return (
-    <div className="rounded-3xl bg-card-bg border border-border-custom p-6 flex flex-col gap-4 shadow-[0_8px_30px_rgba(0,0,0,0.04)] transition-colors duration-300">
+    <div className="bg-white shadow-[0_12px_40px_rgba(0,0,0,0.04)] border border-slate-100/80 rounded-2xl p-6 flex flex-col gap-4 transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_20px_50px_rgba(0,0,0,0.08)]">
       <div className="flex justify-between items-center">
         <h3 className="text-xs font-bold tracking-wider text-text-secondary uppercase">Visual Credit Tracker</h3>
         <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-accent-custom/10 text-accent-custom">
@@ -53,7 +53,7 @@ export function DashboardCalendarCard() {
   ];
 
   return (
-    <div className="rounded-3xl bg-card-bg border border-border-custom p-6 flex flex-col gap-6 shadow-[0_8px_30px_rgba(0,0,0,0.04)] transition-colors duration-300">
+    <div className="bg-white shadow-[0_12px_40px_rgba(0,0,0,0.04)] border border-slate-100/80 rounded-2xl p-6 flex flex-col gap-6 transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_20px_50px_rgba(0,0,0,0.08)]">
       <div>
         <h3 className="text-base font-bold text-text-primary font-heading">Post History Calendar</h3>
         <p className="text-text-secondary text-xs mt-1">

@@ -358,7 +358,7 @@ function DashboardContent() {
   }
 
   return (
-    <div className="min-h-screen bg-bg-primary text-text-primary flex flex-col font-sans selection:bg-accent-custom selection:text-white pb-12 transition-colors duration-300">
+    <div className="min-h-screen bg-[#f8fafc] text-text-primary flex flex-col font-sans selection:bg-accent-custom selection:text-white pb-12 transition-colors duration-300">
       {/* Top Navbar */}
       <header className="w-full bg-card-bg/80 backdrop-blur-xl border-b border-border-custom sticky top-0 z-40 shadow-[0_10px_35px_rgba(0,0,0,0.05)] transition-colors duration-300">
         <div className="max-w-7xl mx-auto px-6 py-4 flex flex-col md:flex-row gap-4 justify-between items-center">
@@ -423,7 +423,7 @@ function DashboardContent() {
         {/* Left 4 Cols: Subscription Status & Branding Profile */}
         <div className="lg:col-span-4 flex flex-col gap-6">
           {/* Visual Profile & Locked Logo */}
-          <div className="rounded-3xl bg-card-bg border border-border-custom p-6 flex flex-col gap-4 shadow-[0_8px_30px_rgba(0,0,0,0.04)] transition-colors duration-300">
+          <div className="bg-white shadow-[0_12px_40px_rgba(0,0,0,0.04)] border border-slate-100/80 rounded-2xl p-6 flex flex-col gap-4 transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_20px_50px_rgba(0,0,0,0.08)]">
             <div className="flex justify-between items-center border-b border-border-custom pb-3">
               <h3 className="text-xs font-bold tracking-wider text-text-secondary uppercase">My Brand Workspace</h3>
               <span className="text-[10px] text-accent-custom uppercase font-extrabold">Active</span>
@@ -488,7 +488,7 @@ function DashboardContent() {
         <div className="lg:col-span-8 flex flex-col gap-8">
           
           {/* AI Logo Generator System Panel */}
-          <div className="rounded-3xl bg-card-bg border border-border-custom p-6 flex flex-col gap-6 shadow-[0_8px_30px_rgba(0,0,0,0.04)] transition-colors duration-300">
+          <div className="bg-white shadow-[0_12px_40px_rgba(0,0,0,0.04)] border border-slate-100/80 rounded-2xl p-6 flex flex-col gap-6 transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_20px_50px_rgba(0,0,0,0.08)]">
             <div>
               <h3 className="text-lg font-bold text-text-primary font-heading">AI Logo Generator System</h3>
               <p className="text-text-secondary text-xs mt-1">
@@ -547,7 +547,7 @@ function DashboardContent() {
           </div>
 
           {/* AI Ad Generator Section */}
-          <div className="rounded-3xl bg-card-bg border border-border-custom p-6 flex flex-col gap-6 shadow-[0_8px_30px_rgba(0,0,0,0.04)] transition-colors duration-300">
+          <div className="bg-white shadow-[0_12px_40px_rgba(0,0,0,0.04)] border border-slate-100/80 rounded-2xl p-6 flex flex-col gap-6 transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_20px_50px_rgba(0,0,0,0.08)]">
             <div>
               <h3 className="text-lg font-bold text-text-primary font-heading">Core AI Content Engine</h3>
               <p className="text-text-secondary text-xs mt-1">
@@ -624,7 +624,7 @@ function DashboardContent() {
           <DashboardCalendarCard />
 
           {/* Content Queue List */}
-          <div className="rounded-3xl bg-card-bg border border-border-custom p-6 flex flex-col gap-6 shadow-[0_8px_30px_rgba(0,0,0,0.04)] transition-colors duration-300">
+          <div className="bg-white shadow-[0_12px_40px_rgba(0,0,0,0.04)] border border-slate-100/80 rounded-2xl p-6 flex flex-col gap-6 transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_20px_50px_rgba(0,0,0,0.08)]">
             <div>
               <h3 className="text-lg font-bold text-text-primary font-heading">AI Content Queue</h3>
               <p className="text-text-secondary text-xs mt-1">
