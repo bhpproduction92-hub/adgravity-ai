@@ -10,6 +10,7 @@ function DashboardContent() {
   
   // Profile state for Step-locking logic
   const [profile, setProfile] = useState<any>(null);
+  const [themeColor, setThemeColor] = useState('indigo');
   
   // Form states (synced with profile metadata)
   const [userId, setUserId] = useState('');
@@ -73,6 +74,12 @@ function DashboardContent() {
       const savedLogo = localStorage.getItem('adgravity_logo');
       if (savedLogo) {
         setFinalizedLogo(savedLogo);
+      }
+
+      // Load theme color from localStorage if it exists
+      const savedColor = localStorage.getItem('adgravity_theme_color');
+      if (savedColor) {
+        setThemeColor(savedColor);
       }
     }
   }, [router]);
@@ -255,18 +262,96 @@ function DashboardContent() {
     return companyName.split(' ').map(w => w[0]).join('').substring(0, 2).toUpperCase();
   };
 
+  // Get hex color code for dynamic style properties based on theme color selection
+  const getColorHex = () => {
+    switch (themeColor) {
+      case 'emerald': return '#10b981';
+      case 'rose': return '#f43f5e';
+      case 'amber': return '#f59e0b';
+      case 'violet': return '#8b5cf6';
+      default: return '#6366f1'; // indigo
+    }
+  };
+
+  // Get tailwind classes for theme styling
+  const getThemeClasses = () => {
+    switch (themeColor) {
+      case 'emerald':
+        return {
+          bg: 'bg-emerald-600 hover:bg-emerald-500',
+          bgLight: 'bg-emerald-500/10 border-emerald-500/20 text-emerald-400',
+          text: 'text-emerald-400',
+          textHover: 'hover:text-emerald-350',
+          accent: 'emerald',
+          gradient: 'from-emerald-600 to-teal-500',
+          focus: 'focus:border-emerald-500',
+          border: 'border-emerald-500/30',
+          shadow: 'shadow-emerald-500/15'
+        };
+      case 'rose':
+        return {
+          bg: 'bg-rose-600 hover:bg-rose-500',
+          bgLight: 'bg-rose-500/10 border-rose-500/20 text-rose-400',
+          text: 'text-rose-400',
+          textHover: 'hover:text-rose-350',
+          accent: 'rose',
+          gradient: 'from-rose-600 to-pink-500',
+          focus: 'focus:border-rose-500',
+          border: 'border-rose-500/30',
+          shadow: 'shadow-rose-500/15'
+        };
+      case 'amber':
+        return {
+          bg: 'bg-amber-600 hover:bg-amber-500',
+          bgLight: 'bg-amber-500/10 border-amber-500/20 text-amber-400',
+          text: 'text-amber-400',
+          textHover: 'hover:text-amber-350',
+          accent: 'amber',
+          gradient: 'from-amber-600 to-orange-500',
+          focus: 'focus:border-amber-500',
+          border: 'border-amber-500/30',
+          shadow: 'shadow-amber-500/15'
+        };
+      case 'violet':
+        return {
+          bg: 'bg-violet-600 hover:bg-violet-500',
+          bgLight: 'bg-violet-500/10 border-violet-500/20 text-violet-400',
+          text: 'text-violet-400',
+          textHover: 'hover:text-violet-350',
+          accent: 'violet',
+          gradient: 'from-violet-600 to-fuchsia-500',
+          focus: 'focus:border-violet-500',
+          border: 'border-violet-500/30',
+          shadow: 'shadow-violet-500/15'
+        };
+      default:
+        return {
+          bg: 'bg-indigo-600 hover:bg-indigo-500',
+          bgLight: 'bg-indigo-500/10 border-indigo-500/20 text-indigo-400',
+          text: 'text-indigo-400',
+          textHover: 'hover:text-indigo-350',
+          accent: 'indigo',
+          gradient: 'from-indigo-600 to-violet-500',
+          focus: 'focus:border-indigo-500',
+          border: 'border-indigo-500/30',
+          shadow: 'shadow-indigo-500/15'
+        };
+    }
+  };
+
   // Vector Logo render templates
   const renderLogoSVG = (index: number) => {
     const initials = getInitials();
     const isSelected = selectedLogoIndex === index && !uploadedLogoUrl;
+    const theme = getThemeClasses();
 
     const baseClass = `w-full h-full p-6 flex flex-col items-center justify-center border-2 rounded-2xl cursor-pointer transition-all ${
-      isSelected ? 'bg-indigo-600/10 border-indigo-500' : 'bg-white/[0.01] border-white/5 hover:border-white/20'
+      isSelected ? `bg-${theme.accent}-600/10 border-${theme.accent}-500` : 'bg-white/[0.01] border-white/5 hover:border-white/20'
     }`;
 
     // Customize icons based on category
     let innerIcon = (
-      <svg className="w-8 h-8 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <svg className={`w-8 h-8 text-${theme.accent}-400`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
       </svg>
     );
@@ -292,7 +377,7 @@ function DashboardContent() {
     if (index === 1) {
       return (
         <div onClick={() => { setSelectedLogoIndex(1); setUploadedLogoUrl(null); }} className={baseClass}>
-          <div className="w-16 h-16 rounded-full bg-indigo-500/10 flex items-center justify-center mb-2">
+          <div className={`w-16 h-16 rounded-full bg-${theme.accent}-500/10 flex items-center justify-center mb-2`}>
             {innerIcon}
           </div>
           <span className="text-xs font-bold tracking-widest text-white">{initials}</span>
@@ -315,7 +400,7 @@ function DashboardContent() {
     if (index === 3) {
       return (
         <div onClick={() => { setSelectedLogoIndex(3); setUploadedLogoUrl(null); }} className={baseClass}>
-          <div className="w-16 h-16 bg-gradient-to-tr from-sky-600 to-indigo-500 rounded-3xl flex items-center justify-center mb-2 shadow-lg shadow-sky-500/15">
+          <div className={`w-16 h-16 bg-gradient-to-tr ${theme.gradient} rounded-3xl flex items-center justify-center mb-2 shadow-lg ${theme.shadow}`}>
             <span className="text-white text-xl font-black">{initials}</span>
           </div>
           <span className="text-[8px] text-gray-500 uppercase mt-0.5">Modern Tech</span>
@@ -353,29 +438,50 @@ function DashboardContent() {
     );
   }
 
+  const theme = getThemeClasses();
+
   return (
-    <div className="min-h-screen bg-[#07090e] text-gray-100 flex flex-col font-sans selection:bg-indigo-500 selection:text-white pb-12">
+    <div className={`min-h-screen bg-[#07090e] text-gray-100 flex flex-col font-sans selection:bg-${theme.accent}-500 selection:text-white pb-12`}>
       {/* Top Navbar */}
       <header className="w-full bg-[#0c0f18]/80 backdrop-blur-xl border-b border-white/5 sticky top-0 z-40">
-        <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+        <div className="max-w-7xl mx-auto px-6 py-4 flex flex-col sm:flex-row gap-4 justify-between items-center">
           <div className="flex items-center gap-2 cursor-pointer" onClick={() => router.push('/')}>
-            <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-indigo-600 to-violet-500 flex items-center justify-center">
+            <div className={`w-8 h-8 rounded-xl bg-gradient-to-tr ${theme.gradient} flex items-center justify-center`}>
               <span className="text-base font-bold text-white">A</span>
             </div>
             <span className="text-lg font-semibold tracking-tight text-white font-heading">
-              AdGravity<span className="text-indigo-400">.AI</span>
+              AdGravity<span className={`text-${theme.accent}-400`}>.AI</span>
             </span>
           </div>
 
-          <div className="flex items-center gap-4">
+          <div className="flex flex-wrap items-center justify-center gap-3">
+            <button 
+              onClick={() => router.push('/dashboard/generator')}
+              className="px-3 py-2 rounded-xl bg-white/5 hover:bg-white/10 text-white font-medium text-xs border border-white/10 transition-all active:scale-95 flex items-center gap-1.5"
+            >
+              Creative Editor 🎨
+            </button>
+            <button 
+              onClick={() => router.push('/dashboard/settings')}
+              className="px-3 py-2 rounded-xl bg-white/5 hover:bg-white/10 text-white font-medium text-xs border border-white/10 transition-all active:scale-95 flex items-center gap-1.5"
+            >
+              Settings ⚙️
+            </button>
+            <button 
+              onClick={() => router.push('/admin/control-center')}
+              className="px-3 py-2 rounded-xl bg-white/5 hover:bg-white/10 text-white font-medium text-xs border border-white/10 transition-all active:scale-95 flex items-center gap-1.5"
+            >
+              Admin Control 🔑
+            </button>
+
             {response?.subscription ? (
-              <span className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-semibold">
+              <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-semibold">
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" /> Active Trial
               </span>
             ) : (
               <button
                 onClick={() => setShowSubscriptionPopup(true)}
-                className="px-3 py-1 rounded-full bg-amber-500/15 border border-amber-500/20 hover:border-amber-500/40 text-amber-400 text-xs font-semibold"
+                className="px-3 py-1.5 rounded-full bg-amber-500/15 border border-amber-500/20 hover:border-amber-500/40 text-amber-400 text-xs font-semibold transition-all active:scale-95"
               >
                 ⚠️ Start ₹1 Trial
               </button>
@@ -399,7 +505,7 @@ function DashboardContent() {
           <div className="rounded-3xl bg-white/5 border border-white/10 p-6 flex flex-col gap-4 shadow-xl">
             <div className="flex justify-between items-center border-b border-white/5 pb-3">
               <h3 className="text-sm font-semibold tracking-wide text-gray-400 uppercase">My Brand Workspace</h3>
-              <span className="text-[10px] text-indigo-400 uppercase font-semibold">Active</span>
+              <span className={`text-[10px] ${theme.text} uppercase font-semibold`}>Active</span>
             </div>
             
             {/* Display profile metadata */}
@@ -428,7 +534,7 @@ function DashboardContent() {
               {finalizedLogo ? (
                 <div className="flex flex-col items-center gap-2">
                   {finalizedLogo.startsWith('AI_LOGO_') ? (
-                    <div className="w-20 h-20 rounded-2xl bg-indigo-500/10 flex items-center justify-center border border-indigo-500/30">
+                    <div className={`w-20 h-20 rounded-2xl bg-${theme.accent}-500/10 flex items-center justify-center border ${theme.border}`}>
                       <span className="text-white font-black text-xl">{getInitials()}</span>
                     </div>
                   ) : (
@@ -447,11 +553,10 @@ function DashboardContent() {
             </div>
           </div>
 
-          {/* Credit Tracker Card */}
           <div className="rounded-3xl bg-white/5 border border-white/10 p-6 flex flex-col gap-4 shadow-xl">
             <div className="flex justify-between items-center">
               <h3 className="text-sm font-semibold tracking-wide text-gray-400 uppercase">Visual Credit Tracker</h3>
-              <span className="text-xs text-indigo-400 font-bold">Daily Reset</span>
+              <span className={`text-xs ${theme.text} font-bold`}>Daily Reset</span>
             </div>
             <div className="flex items-baseline gap-1.5 mt-2">
               <span className="text-5xl font-black text-white">{credits}</span>
@@ -460,11 +565,11 @@ function DashboardContent() {
             <div className="flex flex-col gap-1.5 mt-2">
               <div className="w-full h-2.5 bg-white/10 rounded-full overflow-hidden">
                 <div 
-                  className="h-full bg-gradient-to-r from-indigo-500 to-violet-500 transition-all duration-500" 
-                  style={{ width: `${(credits / maxCredits) * 100}%` }}
+                  className="h-full transition-all duration-500" 
+                  style={{ width: `${(credits / maxCredits) * 100}%`, backgroundColor: getColorHex() }}
                 />
               </div>
-              <span className="text-[10px] text-gray-450 mt-1">
+              <span className="text-[10px] text-gray-455 mt-1">
                 {credits > 0 ? 'Use your credit to generate bilingual ad copies.' : 'Credits depleted. Start a ₹1 trial to replenish!'}
               </span>
             </div>
@@ -522,7 +627,7 @@ function DashboardContent() {
             {/* Finalize Logo button */}
             <button 
               onClick={handleFinalizeLogo}
-              className="w-full py-3.5 rounded-xl bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 text-white font-semibold text-sm transition-all active:scale-[0.98]"
+              className={`w-full py-3.5 rounded-xl bg-gradient-to-r ${theme.gradient} hover:opacity-90 text-white font-semibold text-sm transition-all active:scale-[0.98] shadow-md`}
             >
               Finalize Logo & Connect Workspace
             </button>
@@ -556,14 +661,14 @@ function DashboardContent() {
                   placeholder="e.g. Get a flat 30% discount on all Guwahati local delivery orders this Sunday!"
                   value={offerDetails}
                   onChange={(e) => setOfferDetails(e.target.value)}
-                  className="px-4 py-3 rounded-xl bg-white/5 border border-white/10 focus:border-indigo-500 focus:outline-none text-white text-sm transition-all resize-none"
+                  className={`px-4 py-3 rounded-xl bg-white/5 border border-white/10 focus:border-${theme.accent}-500 focus:outline-none text-white text-sm transition-all resize-none`}
                 />
               </div>
 
               <button 
                 type="submit" 
                 disabled={generatingContent}
-                className="w-full py-3.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 disabled:bg-indigo-700 text-white font-semibold text-sm transition-all active:scale-[0.98] shadow-md shadow-indigo-500/10"
+                className={`w-full py-3.5 rounded-xl bg-${theme.accent}-600 hover:bg-${theme.accent}-500 disabled:opacity-50 text-white font-semibold text-sm transition-all active:scale-[0.98] shadow-md`}
               >
                 {generatingContent ? 'Generating captions via Gemini...' : 'Generate Bilingual Ad Copy'}
               </button>
@@ -571,17 +676,26 @@ function DashboardContent() {
 
             {/* Generation Output Success */}
             {generationSuccess && (
-              <div className="p-5 bg-indigo-500/10 border border-indigo-500/20 rounded-2xl flex flex-col gap-4">
-                <h4 className="text-sm font-bold text-indigo-300">✨ Generated Localized Captions:</h4>
+              <div className={`p-5 bg-${theme.accent}-500/10 border border-${theme.accent}-500/20 rounded-2xl flex flex-col gap-4`}>
+                <h4 className={`text-sm font-bold ${theme.text}`}>✨ Generated Localized Captions:</h4>
                 <div className="flex flex-col gap-4">
                   <div className="flex flex-col gap-1">
-                    <span className="text-[10px] uppercase tracking-wider text-indigo-400 font-bold">English Caption</span>
+                    <span className={`text-[10px] uppercase tracking-wider ${theme.text} font-bold`}>English Caption</span>
                     <p className="text-sm leading-relaxed text-gray-200">{generationSuccess.caption_en}</p>
                   </div>
                   <div className="border-t border-white/5 pt-3 flex flex-col gap-1">
                     <span className="text-[10px] uppercase tracking-wider text-violet-400 font-bold">Assamese Transcreation</span>
                     <p className="text-sm leading-relaxed text-gray-200">{generationSuccess.caption_as}</p>
                   </div>
+                </div>
+                {/* Visual Resize Link */}
+                <div className="border-t border-white/5 pt-4 flex justify-end">
+                  <button
+                    onClick={() => router.push('/dashboard/generator')}
+                    className={`px-4 py-2 rounded-xl bg-${theme.accent}-600 hover:bg-${theme.accent}-500 text-white font-semibold text-xs transition-all active:scale-[0.98] flex items-center gap-1.5`}
+                  >
+                    🎨 Open in Creative Editor (Resize Layouts)
+                  </button>
                 </div>
               </div>
             )}
@@ -629,7 +743,7 @@ function DashboardContent() {
                       className={`aspect-square rounded-lg flex flex-col items-center justify-between p-1.5 relative border ${
                         activePost?.status === 'published' ? 'bg-emerald-950/20 border-emerald-500/30 text-emerald-300' :
                         activePost?.status === 'pending' ? 'bg-amber-950/20 border-amber-500/30 text-amber-300' :
-                        activePost?.status === 'scheduled' ? 'bg-indigo-950/20 border-indigo-500/30 text-indigo-300' :
+                        activePost?.status === 'scheduled' ? `bg-${theme.accent}-950/20 border-${theme.accent}-500/30 text-${theme.accent}-300` :
                         'bg-white/[0.01] border-white/5 text-gray-505 hover:bg-white/5'
                       }`}
                     >
@@ -690,7 +804,7 @@ function DashboardContent() {
                           return (
                             <>
                               <div className="flex flex-col gap-1">
-                                <span className="text-[10px] uppercase tracking-wider text-indigo-400 font-bold">English Caption</span>
+                                <span className={`text-[10px] uppercase tracking-wider ${theme.text} font-bold`}>English Caption</span>
                                 <p className="text-xs text-gray-300 leading-relaxed">{parsed.caption_en}</p>
                               </div>
                               {parsed.caption_as && (
